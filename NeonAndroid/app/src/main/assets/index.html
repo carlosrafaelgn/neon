@@ -1,0 +1,3473 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-us">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, minimal-ui, shrink-to-fit=no" />
+
+	<meta property="og:locale" content="en_US" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://carlosrafaelgn.github.io/neon/" />
+	<meta property="og:title" content="Neon Labyrinth Maker" />
+	<meta property="og:site_name" content="Neon Labyrinth Maker" />
+	<meta property="og:description" content="Neon Labyrinth Maker" />
+	<meta property="og:image" content="https://carlosrafaelgn.github.io/neon/assets/screenshot.jpg" />
+	<meta property="og:image:type" content="image/jpeg">
+	<meta property="og:image:width" content="1280">
+	<meta property="og:image:height" content="720">
+
+	<meta name="author" content="Carlos Rafael Gimenes das Neves" />
+	<meta name="description" content="Neon Labyrinth Maker" />
+	<meta name="keywords" content="neon, labyrinth, maker, game, mobile game, desktop game" />
+
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="apple-mobile-web-app-title" content="Neon Labyrinth Maker" />
+	<!--
+		https://w3c.github.io/manifest/#icon-masks
+		https://github.com/w3c/manifest/issues/555
+	-->
+	<link rel="apple-touch-icon" sizes="57x57" href="favicons/apple-icon-57x57.png" />
+	<link rel="apple-touch-icon" sizes="60x60" href="favicons/apple-icon-60x60.png" />
+	<link rel="apple-touch-icon" sizes="72x72" href="favicons/apple-icon-72x72.png" />
+	<link rel="apple-touch-icon" sizes="76x76" href="favicons/apple-icon-76x76.png" />
+	<link rel="apple-touch-icon" sizes="114x114" href="favicons/apple-icon-114x114.png" />
+	<link rel="apple-touch-icon" sizes="120x120" href="favicons/apple-icon-120x120.png" />
+	<link rel="apple-touch-icon" sizes="144x144" href="favicons/apple-icon-144x144.png" />
+	<link rel="apple-touch-icon" sizes="152x152" href="favicons/apple-icon-152x152.png" />
+	<link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-icon-180x180.png" />
+	<link rel="icon" type="image/png" sizes="512x512" href="favicons/favicon-512x512.png" />
+	<link rel="icon" type="image/png" sizes="192x192" href="favicons/favicon-192x192.png" />
+	<link rel="icon" type="image/png" sizes="96x96" href="favicons/favicon-96x96.png" />
+	<link rel="icon" type="image/png" sizes="48x48" href="favicons/favicon-48x48.png" />
+	<link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png" />
+	<link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png" />
+	<link rel="Shortcut Icon" href="favicon.ico" />
+	<link rel="Shortcut Icon" href="favicon.png" />
+	<link rel="manifest" href="manifest.json" />
+	<meta name="msapplication-config" content="browserconfig.xml" />
+	<meta name="theme-color" content="#222222" />
+
+	<title>Neon Labyrinth Maker</title>
+
+	<style type="text/css">
+		html {
+			height: 100%;
+			min-height: 100%;
+			max-height: 100%;
+			background: #000; /* Opera for Android in full screen mode?!?! */
+		}
+
+		body, input, textarea, select {
+			font: normal 30px 'Segoe UI', 'Open Sans', Roboto, sans-serif;
+		}
+
+		body {
+			padding: 0;
+			margin: 0;
+			color: #fff;
+			height: 100%;
+			min-height: 100%;
+			max-height: 100%;
+			overflow: hidden;
+		}
+
+		#divLoading {
+			position: absolute;
+			z-index: 9999;
+			margin: 0;
+			padding: 0;
+			left: 0;
+			bottom: 50px;
+			width: 100%;
+			text-align: center;
+			opacity: 0;
+			text-shadow: 0 0 8px #fff;
+			-webkit-transition: opacity ease-in-out .2s;
+			-o-transition: opacity ease-in-out .2s;
+			transition: opacity ease-in-out .2s;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+			pointer-events: none;
+		}
+
+		#btnInstall {
+			display: block;
+			color: #000;
+			background: #fff;
+			border-radius: 5px;
+			border: 0;
+			cursor: pointer;
+		}
+
+			#btnInstall, #btnInstall:active, #btnInstall:focus {
+				outline: 0;
+			}
+
+		#divHelp, #divLevelSelection {
+			position: absolute;
+			z-index: 9990;
+			margin: 0;
+			opacity: 0;
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
+			-webkit-transition: opacity ease-in-out .5s;
+			-o-transition: opacity ease-in-out .5s;
+			transition: opacity ease-in-out .5s;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+		}
+
+		#divHelp {
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0, 0, 0, 0.75);
+		}
+
+		#divLevelSelection {
+			padding: 0;
+		}
+
+			#divLoading.opaque, #divHelp.opaque, #divLevelSelection.opaque {
+				opacity: 1;
+			}
+
+			#divHelp > div, #divLevelSelection > div {
+				position: relative;
+				margin: 0;
+				padding: 0;
+				width: 100%;
+				height: 100%;
+				overflow: auto;
+				text-align: center;
+			}
+
+		.level {
+			display: inline-block;
+			cursor: pointer;
+			width: 18%;
+			text-align: left;
+			background-color: #000;
+			background-repeat: no-repeat;
+			background-size: contain;
+			background-position: center;
+			background-origin: content-box;
+			border-radius: 10px;
+			border-width: 3px;
+			border-style: solid;
+			-webkit-box-shadow: 0 0 10px 3px, inset 0 0 10px 3px;
+			box-shadow: 0 0 10px 3px, inset 0 0 10px 3px;
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
+			-ms-touch-action: manipulation;
+			touch-action: manipulation;
+		}
+
+		.level, .level:focus, .level:active {
+			-webkit-tap-highlight-color: transparent;
+			-webkit-touch-callout: none;
+			outline: 0 none transparent;
+		}
+
+		.level0 {
+			color: #06f;
+			border-color: #06f;
+		}
+
+		.level1 {
+			color: #0f0;
+			border-color: #0f0;
+		}
+
+		.level2 {
+			color: #f80;
+			border-color: #f80;
+		}
+
+		.level3 {
+			color: #f00;
+			border-color: #f00;
+		}
+
+		.level4 {
+			color: #f0f;
+			border-color: #f0f;
+		}
+
+		.level5 {
+			color: #fff;
+			border-color: #fff;
+		}
+
+		a, a:active, a:focus, a:visited {
+			text-decoration: none;
+			color: #f80;
+			border: 0;
+			outline: 0;
+		}
+
+		canvas {
+			margin: 0 auto;
+		}
+	</style>
+</head>
+<body>
+
+	<div id="divLoading" class="opaque" data-string="text|Loading"></div>
+
+	<div id="divHelp">
+		<div>
+			<button type="button" id="btnInstall" style="display: none" onclick="showInstallationPrompt()" data-string="text|InstallAndPlayOffline"></button>
+			<span data-string="text|About1"></span> &#x1F601;<br />
+			<br />
+			<span data-string="text|About2"></span><br />
+			<br />
+			<span data-string="text|About3"></span><br />
+			<br />
+			<span data-string="text|About4"></span> <a href="https://github.com/carlosrafaelgn/neon" target="_blank">github.com/carlosrafaelgn/neon</a>. <span data-string="text|About5"></span> <a href="https://carlosrafaelgn.github.io/neon" target="_blank" data-string="text|About6"></a> <span data-string="text|About7"></span> <a href="https://play.google.com/store/apps/details?id=br.com.carlosrafaelgn.neon" target="_blank">Android/WebView</a> <span data-string="text|About8"></span>
+		</div>
+	</div>
+
+	<div id="divLevelSelection"><div><div data-string="text|LevelSelection"></div></div></div>
+
+	<script type="text/javascript" src="phaser-3.18.1.min.js"></script>
+	<script type="text/javascript">
+		//<![CDATA[
+		"use strict";
+
+		var queryString = "", isNeon = false, isPWA = false, language = "en", strings = null;
+
+		(function () {
+			var i, pair, assoc = {}, keyValues = location.search.substring(1).split("&");
+			for (i = keyValues.length - 1; i >= 0; i--) {
+				pair = keyValues[i].split("=");
+				assoc[decodeURIComponent(pair[0].replace(/\+/g, " "))] = (pair.length === 1 ? "" : decodeURIComponent(pair[1].replace(/\+/g, " ")));
+			}
+			queryString = assoc;
+			isNeon = ("neon" in window);
+			isPWA = (("pwa" in queryString) || isNeon);
+
+			if (!window.strings || (typeof window.strings !== "object")) window.strings = {};
+			function addString(key, value) { if (!window.strings[key]) window.strings[key] = value; }
+
+			language = (isNeon ? window.neon.getBrowserLanguage() : (navigator.userLanguage || navigator.language));
+			if (language && language.toLowerCase().indexOf("pt") === 0) {
+				language = "pt";
+				addString("Loading", "Carregando\u2026");
+				addString("LevelSelection", "Seleção de Nível");
+				addString("InstallAndPlayOffline", "Instale e jogue offline!");
+				addString("About1", "Meu filho tem curtido muito jogos de labirinto esses tempos (Julho de 2019). Então\u2026 Eu decidi criar um para ele! Os buracos viraram bombas porque ele ama explosões! Pepinos devem ser coletados em alguns dos níveis porque ele adora um certo pepino de um desenho famoso.");
+				addString("About2", "Como eu não tenho muito tempo, e não sou tão bom assim projetando níveis, eu criei um jogo no estilo \"maker\".");
+				addString("About3", "Suporte ao acelerômetro é experimental. Ele pode ter um comportamento invertido, ou pode até mesmo não funcionar dependendo do dispositivo/navegador.");
+				addString("About4", "O jogo usa o Phaser 3.18.1 e seu código-fonte pode ser encontrado aqui:");
+				addString("About5", "Você também pode");
+				addString("About6", "jogá-lo online");
+				addString("About7", "ou baixar uma versão para");
+				addString("About8", "(apenas para manter a tela ligada mesmo sem que ela seja tocada).");
+				addString("ShareHelp", "Aqui você pode:\n- Deixar o texto em branco para começar um nível vazio;\n- Copiar esse texto e enviá-lo a um amigo (ou colar o texto que um amigo te enviou);\n- Digitar o número de um nível para criar sua versão personalizada dele!");
+			} else {
+				language = "en";
+				addString("Loading", "Loading\u2026");
+				addString("LevelSelection", "Level Selection");
+				addString("InstallAndPlayOffline", "Install and play offline!");
+				addString("About1", "My son is really into labyrinth games these days (July 2019). So\u2026 I decided to make one for him! Holes became bombs because he loves explosions! Cucumbers must be collected in some levels because he enjoys a certain cucumber from a famous cartoon.");
+				addString("About2", "Since I do not have much time, and also because I am not that good at designing levels, I created a maker-like game.");
+				addString("About3", "Accelerometer support is experimental. It may have an inverted behavior or may not even work at all in different devices/browsers.");
+				addString("About4", "The game uses Phaser 3.18.1 and its source code can be found here:");
+				addString("About5", "You can also");
+				addString("About6", "play it online");
+				addString("About7", "or download an");
+				addString("About8", "wrapper (just to keep the screen on even without touching it).");
+				addString("ShareHelp", "Here you can:\n- Clear the text box to start a new empty level;\n- Copy this text and send to a friend (or paste the text a friend sent you);\n- Enter a level number to create your custom version of it!");
+			}
+
+			window.translate = function (key) { return (window.strings[key] || key); };
+
+			function translateChildren(childNodes) {
+				var i, c, d, idx, attr, key;
+				for (i = childNodes.length - 1; i >= 0; i--) {
+					c = childNodes[i];
+					if (!c.tagName)
+						continue;
+					if (c.childNodes && c.childNodes.length)
+						translateChildren(c.childNodes);
+					if (!(d = c.getAttribute("data-string")) || (idx = d.indexOf("|")) <= 0)
+						continue;
+					attr = d.substr(0, idx);
+					key = d.substr(idx + 1);
+					if (attr === "text")
+						c.appendChild(document.createTextNode(translate(key)));
+					else
+						c.setAttribute(attr, translate(key));
+				}
+			}
+			translateChildren(document.body.childNodes);
+		})();
+
+		if (("serviceWorker" in navigator) && !isNeon) {
+			window.addEventListener("beforeinstallprompt", function (e) {
+				if (("preventDefault" in e))
+					e.preventDefault();
+				installationPrompt = e;
+			});
+
+			navigator.serviceWorker.register("sw.js");
+		}
+
+		var game = null, gameCanvas = null,
+			divLoading = document.getElementById("divLoading"), divLoadingTimeout = 0,
+			installationPrompt = null,
+			divVisible = false, divTimeout = 0, divAdjustTimeout = 0, divAdjustCallback = null,
+			divHelp = document.getElementById("divHelp"),
+			divLevelSelection = document.getElementById("divLevelSelection"),
+			btnInstall = document.getElementById("btnInstall");
+
+		document.body.removeChild(divHelp);
+		document.body.removeChild(divLevelSelection);
+
+		// Helper function used to fix/convert/generate all wall_xxx frames
+		// (Exported from https://www.leshylabs.com/apps/sstool/ as plain JSON to make it easier to fix the walls)
+		function fixAndConvertAtlas() {
+			var a = null;
+			var r = [];
+			for (var i = 0; i < a.length; i++) {
+				var s = a[i], c;
+				if (s.name.startsWith("wall_v")) {
+					c = s.name.substr(6);
+					r.push({
+						"filename": "wall_vg" + c,
+						"frame": { "x": s.x, "y": s.y, "w": 120, "h": 40 },
+						"spriteSourceSize": { "x": 0, "y": 0, "w": 120, "h": 40 },
+						"sourceSize": { "w": 120, "h": 40 },
+						"rotated": false, "trimmed": false, "pivot": { "x": 0.5, "y": 0.5 }
+					});
+					r.push({
+						"filename": "wall_vc" + c,
+						"frame": { "x": s.x, "y": s.y + 40, "w": 120, "h": 40 },
+						"spriteSourceSize": { "x": 0, "y": 0, "w": 120, "h": 40 },
+						"sourceSize": { "w": 120, "h": 40 },
+						"rotated": false, "trimmed": false, "pivot": { "x": 0.5, "y": 0.5 }
+					});
+					r.push({
+						"filename": "wall_v" + c,
+						"frame": { "x": s.x, "y": s.y + 98, "w": 120, "h": 4 },
+						"spriteSourceSize": { "x": 0, "y": 0, "w": 120, "h": 4 },
+						"sourceSize": { "w": 120, "h": 4 },
+						"rotated": false, "trimmed": false, "pivot": { "x": 0.5, "y": 0.5 }
+					});
+				} else if (s.name.startsWith("wall_h")) {
+					c = s.name.substr(6);
+					r.push({
+						"filename": "wall_hg" + c,
+						"frame": { "x": s.x, "y": s.y, "w": 40, "h": 120 },
+						"spriteSourceSize": { "x": 0, "y": 0, "w": 40, "h": 120 },
+						"sourceSize": { "w": 40, "h": 120 },
+						"rotated": false, "trimmed": false, "pivot": { "x": 0.5, "y": 0.5 }
+					});
+					r.push({
+						"filename": "wall_hc" + c,
+						"frame": { "x": s.x + 40, "y": s.y, "w": 40, "h": 120 },
+						"spriteSourceSize": { "x": 0, "y": 0, "w": 40, "h": 120 },
+						"sourceSize": { "w": 40, "h": 120 },
+						"rotated": false, "trimmed": false, "pivot": { "x": 0.5, "y": 0.5 }
+					});
+					r.push({
+						"filename": "wall_h" + c,
+						"frame": { "x": s.x + 98, "y": s.y, "w": 4, "h": 120 },
+						"spriteSourceSize": { "x": 0, "y": 0, "w": 4, "h": 120 },
+						"sourceSize": { "w": 4, "h": 120 },
+						"rotated": false, "trimmed": false, "pivot": { "x": 0.5, "y": 0.5 }
+					});
+				} else {
+					r.push({
+						"filename": s.name,
+						"frame": { "x": s.x, "y": s.y, "w": s.width, "h": s.height },
+						"spriteSourceSize": { "x": 0, "y": 0, "w": s.width, "h": s.height },
+						"sourceSize": { "w": s.width, "h": s.height },
+						"rotated": false, "trimmed": false, "pivot": { "x": 0.5, "y": 0.5 }
+					});
+				}
+			}
+			return JSON.stringify({ frames: r });
+		}
+
+		function showLoading() {
+			if (!divLoading) {
+				divLoading = document.createElement("div");
+				divLoading.setAttribute("id", "divLoading");
+				divLoading.appendChild(document.createTextNode(translate("Loading")));
+				document.body.appendChild(divLoading);
+				if (divLoadingTimeout)
+					clearTimeout(divLoadingTimeout);
+				divLoadingTimeout = setTimeout(function () {
+					divLoadingTimeout = 0;
+					divLoading.className = "opaque";
+				}, 10);
+			}
+		}
+
+		function hideLoading() {
+			if (divLoading) {
+				divLoading.className = "";
+				if (divLoadingTimeout)
+					clearTimeout(divLoadingTimeout);
+				divLoadingTimeout = setTimeout(function () {
+					divLoadingTimeout = 0;
+					document.body.removeChild(divLoading);
+					divLoading = null;
+				}, 210);
+			}
+		}
+
+		function adjustDivWithTimeout() {
+			if (divAdjustTimeout)
+				clearTimeout(divAdjustTimeout);
+			divAdjustCallback();
+			divAdjustTimeout = setTimeout(function () {
+				divAdjustTimeout = 0;
+				divAdjustCallback();
+			}, 100);
+		}
+
+		function showDiv(div, callback) {
+			if (!divVisible && !divTimeout) {
+				divVisible = true;
+				divAdjustCallback = callback;
+				div.className = "";
+				callback();
+				window.addEventListener("resize", adjustDivWithTimeout);
+				document.body.appendChild(div);
+				divTimeout = setTimeout(function () {
+					div.className = "opaque";
+					divTimeout = 0;
+				}, 50);
+				return true;
+			}
+			return false;
+		}
+
+		function hideDiv(div) {
+			if (divVisible && !divTimeout) {
+				window.removeEventListener("resize", adjustDivWithTimeout);
+				divVisible = false;
+				div.className = "";
+				divTimeout = setTimeout(function () {
+					document.body.removeChild(div);
+					divTimeout = 0;
+				}, 550);
+				return true;
+			}
+			return false;
+		}
+
+		function adjustDivHelp() {
+			if (!divVisible)
+				return;
+			var h = parseInt(gameCanvas.style.height),
+				m = (h * 0.2), m2 = (m * 0.2) | 0;
+			divHelp.style.left = gameCanvas.style.marginLeft;
+			divHelp.style.top = gameCanvas.style.marginTop;
+			divHelp.style.width = gameCanvas.style.width;
+			divHelp.style.height = gameCanvas.style.height;
+			divHelp.style.padding = (m >> 1) + "px " + (m | 0) + "px";
+			divHelp.style.fontSize = m2 + "px";
+			divHelp.style.lineHeight = m2 + "px";
+			btnInstall.style.margin = "0 auto " + m2 + "px";
+			btnInstall.style.padding = (m >> 3) + "px " + m2 + "px";
+			btnInstall.style.fontSize = m2 + "px";
+			btnInstall.style.lineHeight = m2 + "px";
+		}
+
+		function showHelp() {
+			btnInstall.style.display = (installationPrompt ? "" : "none");
+			return showDiv(divHelp, adjustDivHelp);
+		}
+
+		function hideHelp() {
+			return hideDiv(divHelp);
+		}
+
+		divHelp.onclick = function (e) {
+			switch (e.target.tagName) {
+				case "DIV":
+				case "SPAN":
+				case "BUTTON":
+					if (divVisible && !divTimeout)
+						window.history.back();
+					break;
+			}
+		};
+
+		function adjustDivLevelSelection() {
+			if (!divVisible)
+				return;
+			// 0.08 = 8% -> (button width = 96) / (game width = 1280)
+			var i, w = parseInt(gameCanvas.style.width), h = parseInt(gameCanvas.style.height),
+				m = (w * 0.08) | 0, p = (h * 0.075), f = (p | 0) + "px", l, button, buttons = divLevelSelection.getElementsByTagName("button"),
+				parent = divLevelSelection.firstChild, title = parent.firstChild;
+			divLevelSelection.style.left = (parseInt(gameCanvas.style.marginLeft) + m) + "px";
+			divLevelSelection.style.top = gameCanvas.style.marginTop;
+			divLevelSelection.style.width = (w - m - m) + "px";
+			divLevelSelection.style.height = gameCanvas.style.height;
+			title.style.padding = (p >> 1) + "px 0";
+			title.style.textShadow = "0 0 " + (p >> 2) + "px #fff";
+			title.style.fontSize = f;
+			title.style.lineHeight = f;
+			l = f;
+			f = ((p * 0.7) | 0) + "px";
+			p = (p >> 1) + "px"
+			m = p + " 8px";
+			for (i = buttons.length - 1; i >= 0; i--) {
+				button = buttons[i];
+				button.style.margin = p;
+				button.style.padding = m;
+				button.style.fontSize = f;
+				button.style.lineHeight = l;
+			}
+		}
+
+		function showLevelSelect() {
+			return showDiv(divLevelSelection, adjustDivLevelSelection);
+		}
+
+		function hideLevelSelect() {
+			return hideDiv(divLevelSelection);
+		}
+
+		function showInstallationPrompt() {
+			if (installationPrompt) {
+				try {
+					var p = installationPrompt;
+					installationPrompt = null;
+					p.prompt();
+				} catch (ex) {
+				}
+			}
+		}
+
+		function _5(x) {
+			return (((x / 5) | 0) * 5);
+		}
+
+		function _10(x) {
+			return (((x / 10) | 0) * 10);
+		}
+
+		function easeBlink(x) {
+			return (x <= 0 ? 0 : (x >= 1 ? 1 : ((x * 8) & 1)));
+		}
+
+		function tweenBlink(scene, targets, onComplete, duration) {
+			for (var i = targets.length - 1; i >= 0; i--)
+				targets[i].setAlpha(0);
+			scene.tweens.add({
+				targets: targets,
+				alpha: 1,
+				ease: easeBlink,
+				duration: (duration || 500),
+				onComplete: onComplete,
+				onCompleteScope: scene
+			});
+		}
+
+		function tweenAlpha(scene, alpha, targets, onComplete, duration, delay, onStart) {
+			scene.tweens.add({
+				targets: targets,
+				alpha: alpha,
+				ease: "Sine.easeInOut",
+				duration: (duration || 500),
+				delay: delay,
+				onComplete: onComplete,
+				onCompleteScope: scene,
+				onStart: onStart,
+				onStartScope: (onStart ? scene : null)
+			});
+		}
+
+		function createFade(scene, startAlpha, endAlpha, onComplete) {
+			var fade = scene.add.image(0, 0, "atlas", "black")
+				.setOrigin(0)
+				.setAlpha(startAlpha)
+				.setDisplaySize(game.width, game.height);
+			tweenAlpha(scene, endAlpha, fade, onComplete);
+			return fade;
+		}
+
+		window.loadSetting = (!("localStorage" in window) ? function () { return null; } : function (key, defaultValue) { var v = localStorage.getItem(key); if (v) { try { return JSON.parse(v); } catch (ex) { } } return defaultValue; });
+
+		window.saveSetting = (!("localStorage" in window) ? function () { } : function (key, value) { return localStorage.setItem(key, JSON.stringify(value)); });
+
+		window.addEventListener("beforeunload", function () {
+			UIObject.saveDefaultObjects();
+		});
+
+		var UIObject = {
+			typeBall: 0,
+			typeWall: 1,
+			typeBomb: 2,
+			typeGoal: 3,
+			typeCucumber: 4,
+
+			editMode: true,
+			touchMode: true,
+			goalsAvailable: true,
+			dirty: false,
+			skipNeonAcceleration: false,
+			accelerationModeNeon: false,
+			accelerationModeSupported: false,
+			accelerationX: 0,
+			accelerationY: 0,
+			invertXY: false,
+
+			shards: null,
+
+			// Treat balls, bombs, cucumbers and goals differently from other objects
+			objects: [],
+			goals: [],
+			bombs: [],
+			cucumbers: [],
+			balls: [],
+
+			//windowResize: function () {
+			//	UIObject.invertXY = (window.innerWidth > window.innerHeight);
+			//},
+
+			btoaUrlSafe: function (str) {
+				// RFC 4648 - https://en.wikipedia.org/wiki/Base64
+				return btoa(str).replace(/\+/g, "-").replace(/\//g, "_").replace(/\=/g, "");
+			},
+
+			atobUrlSafe: function (str) {
+				// RFC 4648 - https://en.wikipedia.org/wiki/Base64
+				var n = str.replace(/\-/g, "+").replace(/\_/g, "/");
+				while ((n.length & 3))
+					n += "=";
+				return atob(n);
+			},
+
+			serializeArray: function (array) {
+				var i, dst = new Array(array.length);
+				for (i = 0; i < array.length; i++)
+					dst[i] = array[i].serialize();
+				return dst;
+			},
+
+			countBytesInArray: function (array) {
+				return 2 + (array.length ? (array.length * array[0].bytesNeeded()) : 0);
+			},
+
+			serializeArrayBinary: function (offset, dstArray, array) {
+				dstArray[offset] = array.length & 0xFF;
+				dstArray[offset + 1] = array.length >>> 8;
+				offset += 2;
+				if (array.length) {
+					for (var i = 0; i < array.length; i++)
+						offset += array[i].serializeBinary(offset, dstArray);
+				}
+				return offset;
+			},
+
+			serialize: function (base64, binary) {
+				var r, array;
+
+				if (binary) {
+					array = new Array(
+						1 +
+						this.countBytesInArray(this.objects) +
+						this.countBytesInArray(this.goals) +
+						this.countBytesInArray(this.bombs) +
+						this.countBytesInArray(this.cucumbers) +
+						this.countBytesInArray(this.balls)
+					);
+					array[0] = 0;
+					r = 1;
+					r = this.serializeArrayBinary(r, array, this.objects);
+					r = this.serializeArrayBinary(r, array, this.goals);
+					r = this.serializeArrayBinary(r, array, this.bombs);
+					r = this.serializeArrayBinary(r, array, this.cucumbers);
+					r = this.serializeArrayBinary(r, array, this.balls);
+					// https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/btoa
+					// https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding#Solution_3_%E2%80%93_JavaScript's_UTF-16_%3E_binary_string_%3E_base64
+					return this.btoaUrlSafe(String.fromCharCode.apply(null, array));
+				}
+
+				// All the names are short, both in here and also in all serialize()
+				// methods, to try to keep the output string as small as possible...
+				r = JSON.stringify({
+					o: this.serializeArray(this.objects),
+					g: this.serializeArray(this.goals),
+					b: this.serializeArray(this.bombs),
+					c: this.serializeArray(this.cucumbers),
+					a: this.serializeArray(this.balls)
+				});
+				return (base64 ? this.btoaUrlSafe(r) : r);
+			},
+
+			deserializeArray: function (scene, array, deserializer) {
+				var i, o;
+
+				for (i = 0; i < array.length; i++) {
+					if (!(o = array[i]))
+						continue;
+					this.add(deserializer(scene, o));
+				}
+			},
+
+			deserializeArrayBinary: function (offset, str, array, deserializer) {
+				if (offset < 0 || (offset + 2) > str.length)
+					return -1;
+
+				var count = (str.charCodeAt(offset) & 0xFF) | ((str.charCodeAt(offset + 1) & 0xFF) << 8);
+
+				offset += 2;
+
+				while (count-- > 0 && offset > 0)
+					offset = deserializer(offset, str, array);
+
+				return offset;
+			},
+
+			deserializeBinary: function (str) {
+				var offset = 1,
+					uiObjects = {
+						o: [],
+						g: [],
+						b: [],
+						c: [],
+						a: []
+					};
+
+				offset = this.deserializeArrayBinary(offset, str, uiObjects.o, WallPrototype.deserializeBinary);
+				offset = this.deserializeArrayBinary(offset, str, uiObjects.g, GoalPrototype.deserializeBinary);
+				offset = this.deserializeArrayBinary(offset, str, uiObjects.b, BombPrototype.deserializeBinary);
+				offset = this.deserializeArrayBinary(offset, str, uiObjects.c, CucumberPrototype.deserializeBinary);
+				offset = this.deserializeArrayBinary(offset, str, uiObjects.a, BallPrototype.deserializeBinary);
+
+				return ((offset < 0) ? {} : uiObjects);
+			},
+
+			deserialize: function (scene, base64OrJsonOrObject) {
+				if (!scene || !base64OrJsonOrObject)
+					return false;
+
+				var uiObjects;
+				try {
+					if ((typeof base64OrJsonOrObject) !== "string") {
+						uiObjects = base64OrJsonOrObject;
+					} else if (base64OrJsonOrObject.charAt(0) === "{") {
+						uiObjects = JSON.parse(base64OrJsonOrObject);
+					} else {
+						uiObjects = this.atobUrlSafe(base64OrJsonOrObject);
+						if (uiObjects.charAt(0) === "{")
+							uiObjects = JSON.parse(uiObjects);
+						else
+							uiObjects = this.deserializeBinary(uiObjects);
+					}
+					if (!uiObjects.o || !("length" in uiObjects.o) ||
+						!uiObjects.g || !("length" in uiObjects.g) ||
+						!uiObjects.b || !("length" in uiObjects.b) ||
+						!uiObjects.c || !("length" in uiObjects.c) ||
+						!uiObjects.a || !("length" in uiObjects.a))
+						return false;
+				} catch (ex) {
+					return false;
+				}
+
+				this.clear();
+
+				this.goalsAvailable = !uiObjects.c.length;
+
+				this.deserializeArray(scene, uiObjects.o, WallPrototype.deserialize);
+				this.deserializeArray(scene, uiObjects.g, GoalPrototype.deserialize);
+				this.deserializeArray(scene, uiObjects.b, BombPrototype.deserialize);
+				this.deserializeArray(scene, uiObjects.c, CucumberPrototype.deserialize);
+				this.deserializeArray(scene, uiObjects.a, BallPrototype.deserialize);
+
+				this.dirty = false;
+
+				return true;
+			},
+
+			saveDefaultObjects: function () {
+				if (this.dirty) {
+					saveSetting("defaultObjects", this.serialize(false));
+					this.dirty = false;
+				}
+			},
+
+			clear: function () {
+				var i, objects;
+
+				objects = this.objects;
+				if (objects.length) {
+					for (i = objects.length - 1; i >= 0; i--) {
+						objects[i].destroy();
+						objects[i] = null;
+					}
+					this.objects = [];
+				}
+
+				objects = this.goals;
+				if (objects.length) {
+					for (i = objects.length - 1; i >= 0; i--) {
+						objects[i].destroy();
+						objects[i] = null;
+					}
+					this.goals = [];
+				}
+
+				objects = this.bombs;
+				if (objects.length) {
+					for (i = objects.length - 1; i >= 0; i--) {
+						objects[i].destroy();
+						objects[i] = null;
+					}
+					this.bombs = [];
+				}
+
+				objects = this.cucumbers;
+				if (objects.length) {
+					for (i = objects.length - 1; i >= 0; i--) {
+						objects[i].destroy();
+						objects[i] = null;
+					}
+					this.cucumbers = [];
+				}
+
+				objects = this.balls;
+				if (objects.length) {
+					for (i = objects.length - 1; i >= 0; i--) {
+						objects[i].destroy();
+						objects[i] = null;
+					}
+					this.balls = [];
+				}
+			},
+
+			processNeonAcceleration: function () {
+				// Process only every other frame
+				if (UIObject.skipNeonAcceleration) {
+					UIObject.skipNeonAcceleration = false;
+					return;
+				}
+				UIObject.skipNeonAcceleration = true;
+
+				var x, y;
+				if (UIObject.invertXY) {
+					x = window.neon.getY();
+					y = window.neon.getX();
+				} else {
+					x = -window.neon.getX();
+					y = window.neon.getY();
+				}
+				if (x > -0.3 && x < -0.3)
+					x = 0;
+				if (y > -0.3 && y < -0.3)
+					y = 0;
+				// Add a simple low-pass filter to smooth the actual movement
+				UIObject.accelerationX = (0.8 * UIObject.accelerationX) + (0.2 * x);
+				UIObject.accelerationY = (0.8 * UIObject.accelerationY) + (0.2 * y);
+			},
+
+			windowDeviceMotion: function (e) {
+				var acc = e.accelerationIncludingGravity, x, y;
+				if (UIObject.invertXY) {
+					x = acc.y;
+					y = acc.x;
+				} else {
+					x = -acc.x;
+					y = acc.y;
+				}
+				if (x > -0.3 && x < -0.3)
+					x = 0;
+				if (y > -0.3 && y < -0.3)
+					y = 0;
+				// Add a simple low-pass filter to smooth the actual movement
+				UIObject.accelerationX = (0.8 * UIObject.accelerationX) + (0.2 * x);
+				UIObject.accelerationY = (0.8 * UIObject.accelerationY) + (0.2 * y);
+			},
+
+			prepare: function (scene) {
+				// https://developers.google.com/web/fundamentals/native-hardware/device-orientation/
+				// https://developer.mozilla.org/en-US/docs/Web/API/Accelerometer
+				// https://developer.mozilla.org/en-US/docs/Web/API/DeviceMotionEvent
+				// https://developer.mozilla.org/en-US/docs/Web/API/Window/devicemotion_event
+				// https://developer.mozilla.org/en-US/docs/Web/API/DeviceOrientationEvent
+				// https://developer.mozilla.org/en-US/docs/Web/API/Window/deviceorientation_event
+
+				this.accelerationModeNeon = false;
+				this.accelerationModeSupported = false;
+				this.accelerationX = 0;
+				this.accelerationY = 0;
+				if (isNeon && window.neon.isSupported()) {
+					this.accelerationModeNeon = true;
+					this.accelerationModeSupported = true;
+				} else if (("DeviceMotionEvent" in window)) {
+					this.accelerationModeSupported = true;
+
+					//window.removeEventListener("resize", this.windowResize);
+					window.removeEventListener("devicemotion", this.windowDeviceMotion);
+
+					// After a lot of testing I realized this API, as of today (2019-07-05),
+					// is still not too reliable in a cross-browser way... :(
+					// This is a wild guess... More like a dirty workaround!
+					//this.invertXY = false;
+					//if (!game.device.os.desktop) {
+					//	this.invertXY = (window.innerWidth > window.innerHeight);
+					//	window.addEventListener("resize", this.windowResize);
+					//}
+					// In the end, we are better off letting the user choose!!!
+
+					window.addEventListener("devicemotion", this.windowDeviceMotion);
+				} else {
+					this.touchMode = true;
+					this.invertXY = false;
+				}
+
+				this.editMode = true;
+				this.touchMode = (this.accelerationModeSupported && !!loadSetting("touchMode", true));
+				this.invertXY = !!loadSetting("invertXY", false);
+
+				// http://www.html5gamedevs.com/topic/41091-matterjs-collision-breaks-at-high-speed/
+				// Uncomment only if necessary!
+				//this.matter.world.engine.positionIterations = 10;
+				//this.matter.world.engine.velocityIterations = 10;
+			},
+
+			resetScene: function (scene) {
+				var i, objects;
+
+				objects = this.goals;
+				for (var i = objects.length - 1; i >= 0; i--)
+					objects[i].reset(scene);
+
+				objects = this.bombs;
+				for (var i = objects.length - 1; i >= 0; i--)
+					objects[i].reset(scene);
+
+				objects = this.cucumbers;
+				for (var i = objects.length - 1; i >= 0; i--)
+					objects[i].reset(scene);
+
+				objects = this.balls;
+				for (var i = objects.length - 1; i >= 0; i--)
+					objects[i].reset(scene);
+
+				scene.matter.world.setGravity(0, 0, 0.0005);
+			},
+
+			getAtArray: function (array, x, y) {
+				var i, obj;
+
+				// Always start searching from the last (topmost) object
+				for (i = array.length - 1; i >= 0; i--) {
+					obj = array[i];
+					if (x >= obj.left && x < obj.right &&
+						y >= obj.top && y < obj.bottom)
+						return obj;
+				}
+
+				return null;
+			},
+
+			getAt: function (x, y) {
+				return (this.getAtArray(this.balls, x, y) ||
+					this.getAtArray(this.cucumbers, x, y) ||
+					this.getAtArray(this.goals, x, y) ||
+					this.getAtArray(this.bombs, x, y) ||
+					this.getAtArray(this.objects, x, y));
+			},
+
+			add: function (obj) {
+				(obj.objectType === UIObject.typeBall ? this.balls : (obj.objectType === UIObject.typeBomb ? this.bombs : (obj.objectType === UIObject.typeGoal ? this.goals : (obj.objectType === UIObject.typeCucumber ? this.cucumbers : this.objects)))).push(obj);
+			},
+
+			remove: function (obj) {
+				var objects = (obj.objectType === UIObject.typeBall ? this.balls : (obj.objectType === UIObject.typeBomb ? this.bombs : (obj.objectType === UIObject.typeGoal ? this.goals : (obj.objectType === UIObject.typeCucumber ? this.cucumbers : this.objects)))),
+					i = objects.indexOf(obj);
+				if (i >= 0) {
+					objects.splice(i, 1);
+					return true;
+				}
+				return false;
+			},
+
+			blowUpBall: function (scene, ball, bomb) {
+				var i, f, b, bv, v, d, dx, dy, balls = this.balls,
+					maxAddedVel = BallPrototype.maxVel * 200 * 200,
+					xa = ball.x, ya = ball.y, xb = bomb.x, yb = bomb.y;
+
+				// Destroy both images
+				ball.destroy();
+				bomb.destroy();
+
+				// Add extra velocity to all balls nearby the bomb
+				for (i = balls.length - 1; i >= 0; i--) {
+					// Balls that have already blown up no longer have a body
+					b = balls[i].image;
+					if (!(bv = b.body))
+						continue;
+
+					dx = b.x - xb;
+					dy = b.y - yb;
+					// Do not use Math.sqrt() just yet, because the extra velocity
+					// we are adding is proportional to the square of the distance
+					v = (dx * dx) + (dy * dy);
+					d = Math.sqrt(v);
+					v = maxAddedVel / v;
+					// Faster than using atan, sin and cos ;)
+					b.setVelocity(
+						(bv = bv.velocity).x + (v * dx / d),
+						bv.y + (v * dy / d)
+					);
+				}
+
+				// Create a few shards
+				balls = this.shards;
+				if (!balls) {
+					balls = new Array(f = 30);
+					i = 0;
+					this.shards = balls;
+				} else {
+					balls[f = ((i = balls.length) + 30)] = null;
+				}
+				while (i < f) {
+					b = scene.add.image(xa, ya, "atlas", "ball")
+						.setOrigin(0.5)
+						.setBlendMode(Phaser.BlendModes.ADD)
+						.setScale(1.2, 0.4);
+					// Angle of the shard
+					d = Phaser.Math.FloatBetween(0, 6.28);
+					// Initial velocity in pixels/ms
+					v = Phaser.Math.FloatBetween(0.2, 1.5);
+					b.dt = 0;
+					b.x0 = xa;
+					b.y0 = ya;
+					b.vx = v * Math.cos(d);
+					b.vy = v * Math.sin(d);
+					b.setRotation(d);
+					balls[i++] = b;
+				}
+			},
+
+			blowUpBallInGoal: function (scene, ball, goal) {
+				var i, f, d, s, shards, xs, ys,
+					xg = goal.x, yg = goal.y;
+
+				ball.destroy();
+
+				shards = this.shards;
+				if (!shards) {
+					shards = new Array(f = 40);
+					i = 0;
+					this.shards = shards;
+				} else {
+					shards[f = ((i = shards.length) + 40)] = null;
+				}
+				while (i < f) {
+					// Angle of the shard
+					d = Phaser.Math.FloatBetween(0, 6.28);
+					xs = xg + (game.height * Math.cos(d));
+					ys = yg + (game.height * Math.sin(d));
+
+					s = scene.add.image(xs, ys, "atlas", "ball")
+						.setOrigin(0.5)
+						.setBlendMode(Phaser.BlendModes.ADD)
+						.setScale(2, 0.2);
+
+					s.dt = 0;
+					s.x0 = xs;
+					s.y0 = ys;
+					// Initial velocity in pixels/ms
+					s.vx = (xg - xs) / 500;
+					s.vy = (yg - ys) / 500;
+					s.setRotation(d);
+					shards[i++] = s;
+				}
+			},
+
+			collectCucumber: function (scene, ball, cucumber) {
+				cucumber.destroy();
+			},
+
+			showAllGoalsBlinking: function (scene) {
+				var i, goal, goals = this.goals, targets = [];
+
+				for (i = goals.length - 1; i >= 0; i--) {
+					goal = goals[i];
+					goal.reset(scene);
+					targets.push(goal.image);
+				}
+
+				tweenBlink(scene, targets);
+			},
+
+			processShards: function (delta) {
+				var i, s, dt, shards = this.shards, empty = true;
+				for (i = shards.length - 1; i >= 0; i--) {
+					if (!(s = shards[i]))
+						continue;
+					dt = s.dt + delta;
+					if (dt >= 500) {
+						s.destroy();
+						shards[i] = null;
+					} else {
+						empty = false;
+						s.setAlpha((500 - dt) * 0.002);
+						s.dt = dt;
+						s.x = s.x0 + (s.vx * dt);
+						s.y = s.y0 + (s.vy * dt);
+					}
+				}
+				if (empty)
+					this.shards = null;
+			},
+
+			loadTitle: function (scene) {
+				this.deserialize(scene, '{"o":[{"l":370,"t":230,"s":80,"c":0,"v":true},{"l":410,"t":260,"s":80,"c":0,"v":true},{"l":450,"t":180,"s":200,"c":0,"v":true},{"l":330,"t":180,"s":200,"c":0,"v":true},{"l":510,"t":180,"s":200,"c":1,"v":true},{"l":650,"t":180,"s":200,"c":2,"v":true},{"l":650,"t":340,"s":120,"c":2,"v":false},{"l":650,"t":180,"s":120,"c":2,"v":false},{"l":730,"t":180,"s":200,"c":2,"v":true},{"l":510,"t":180,"s":120,"c":1,"v":false},{"l":510,"t":260,"s":120,"c":1,"v":false},{"l":510,"t":340,"s":120,"c":1,"v":false},{"l":790,"t":180,"s":200,"c":3,"v":true},{"l":830,"t":220,"s":80,"c":3,"v":true},{"l":870,"t":260,"s":80,"c":3,"v":true},{"l":910,"t":180,"s":200,"c":3,"v":true}],"g":[],"b":[],"c":[],"a":[]}');
+			},
+
+			loadDefaultEditor: function (scene) {
+				if (!this.deserialize(scene, loadSetting("defaultObjects", null))) {
+					this.clear();
+
+					this.add(new Ball(scene, 0, 0));
+					this.add(new Ball(scene, game.width * 0.5, 0));
+
+					this.add(new Bomb(scene, game.width - 75, game.height - 150));
+
+					this.add(new Goal(scene, game.width - 75, game.height - 75));
+
+					this.add(new Wall(scene, 50, 50, 200, 0, true));
+					this.add(new Wall(scene, 90, 100, 400, 3, false));
+					this.add(new Wall(scene, 200, 490, 350, 2, false));
+					this.add(new Wall(scene, 300, 140, 150, 1, true));
+					this.add(new Wall(scene, 300, 340, 150, 1, true));
+					this.add(new Wall(scene, 800, 200, 400, 4, true));
+					this.add(new Wall(scene, 840, 200, 150, 4, false));
+					this.add(new Wall(scene, 840, 340, 150, 5, false));
+					this.add(new Wall(scene, 990, 340, 150, 5, true));
+
+					this.dirty = false;
+				}
+			},
+		};
+
+		// I'm not using Flare.prototype = { ... } for performance reasons
+		var FlarePrototype = {
+			minVel: 100 / 1000, // px per ms
+			maxVel: 200 / 1000,
+
+			count: 64,
+			flares: [],
+
+			prepare: function (scene) {
+				var i, flares;
+
+				if ((flares = this.flares) && flares.length)
+					return;
+
+				flares = new Array(this.count);
+
+				for (i = this.count - 1; i >= 0; i--)
+					flares[i] = new Flare(scene);
+
+				this.flares = flares;
+			},
+
+			destroyAll: function () {
+				var i, flares;
+
+				if (!(flares = this.flares))
+					return;
+
+				for (i = flares.length - 1; i >= 0; i--) {
+					flares[i].destroy();
+					flares[i] = null;
+				}
+
+				this.flares = null;
+			},
+
+			processAll: function (delta) {
+				var i, flares;
+
+				if (!(flares = this.flares))
+					return;
+
+				for (i = flares.length - 1; i >= 0; i--)
+					flares[i].process(delta);
+			}
+		};
+
+		// I'm not using Flare.prototype = { ... } for performance reasons
+		var FlareFunctions = {
+			reset: function (forceBottom) {
+				var flare = this.flare,
+					x = Phaser.Math.FloatBetween(0, 1),
+					y = (forceBottom ? game.height + 50 : Phaser.Math.FloatBetween(-50, game.height + 50));
+				flare.setScale(Phaser.Math.FloatBetween(0.5, 1.5))
+					.setAlpha(Phaser.Math.FloatBetween(0.25, 0.75))
+					.setTexture("atlas", "flare" + ((x * 8) | 0));
+				x *= game.width;
+				flare.x = x;
+				flare.y = y;
+				this.a = Phaser.Math.FloatBetween(10, 60);
+				this.av = Phaser.Math.FloatBetween(0.001, 0.0025); // rads per ms
+				this.x0 = x;
+				this.y0 = y;
+				this.v = Phaser.Math.FloatBetween(FlarePrototype.minVel, FlarePrototype.maxVel);
+				this.dt = 0;
+			},
+
+			process: function (delta) {
+				var dt = this.dt + delta,
+					y = this.y0 - (this.v * dt);
+				if (y < -50) {
+					this.reset(true);
+				} else {
+					var flare = this.flare;
+					flare.x = this.x0 + (this.a * Math.sin(dt * this.av));
+					flare.y = y;
+					this.dt = dt;
+				}
+			},
+
+			destroy: function () {
+				var flare;
+				if ((flare = this.flare)) {
+					flare.destroy();
+					this.flare = null;
+				}
+			}
+		};
+
+		// I'm not using Flare.prototype = { ... } for performance reasons
+		function Flare(scene) {
+			this.flare = scene.add.image(0, 0, "atlas", "flare0")
+				.setOrigin(0.5)
+				.setBlendMode(Phaser.BlendModes.ADD);
+
+			// I'm copying the functions here, instead of using
+			// Flare.prototype = { ... }, for performance reasons
+			for (var n in FlareFunctions)
+				this[n] = FlareFunctions[n];
+
+			this.reset(false);
+		}
+
+		// I'm not using Wall.prototype = { ... } for performance reasons
+		var WallPrototype = {
+			imageLargeDimension: 120,
+			thickness: 40,
+			minSize: 40 * 2,
+			binaryLength: 2 + 2 + 2 + 1 + 1,
+
+			colors: ["#06f", "#0c0", "#f80", "#c00", "#c0c", "#ccc"],
+
+			deserialize: function (scene, o) {
+				return new Wall(scene, o.l | 0, o.t | 0, o.s | 0, o.c | 0, !!o.v);
+			},
+
+			deserializeBinary: function (offset, str, array) {
+				if ((offset + WallPrototype.binaryLength) > str.length)
+					return -1;
+
+				array.push({
+					l: ((str.charCodeAt(offset++) & 0xFF) | ((str.charCodeAt(offset++) & 0xFF) << 8)) * 10,
+					t: ((str.charCodeAt(offset++) & 0xFF) | ((str.charCodeAt(offset++) & 0xFF) << 8)) * 10,
+					s: ((str.charCodeAt(offset++) & 0xFF) | ((str.charCodeAt(offset++) & 0xFF) << 8)) * 10,
+					c: (str.charCodeAt(offset++) & 0xFF),
+					v: !!(str.charCodeAt(offset++) & 0xFF)
+				});
+
+				return offset;
+			}
+		};
+
+		// I'm not using Wall.prototype = { ... } for performance reasons
+		var WallFunctions = {
+			serialize: function () {
+				return {
+					l: this.left,
+					t: this.top,
+					s: (this.vertical ? this.height : this.width),
+					c: this.color,
+					v: this.vertical
+				};
+			},
+
+			bytesNeeded: function () {
+				return WallPrototype.binaryLength;
+			},
+
+			serializeBinary: function (offset, array) {
+				var x;
+
+				array[offset] = (x = ((this.left / 10) | 0)) & 0xFF;
+				array[offset + 1] = x >>> 8;
+				array[offset + 2] = (x = ((this.top / 10) | 0)) & 0xFF;
+				array[offset + 3] = x >>> 8;
+				array[offset + 4] = (x = (((this.vertical ? this.height : this.width) / 10) | 0)) & 0xFF;
+				array[offset + 5] = x >>> 8;
+				array[offset + 6] = this.color;
+				array[offset + 7] = (this.vertical ? 1 : 0);
+
+				return this.bytesNeeded();
+			},
+
+			adjust: function (scene, x0, y0, x1, y1) {
+				// Make sure x0, y0, x1 and y1 are even numbers
+				x0 &= ~1;
+				y0 &= ~1;
+				x1 &= ~1;
+				y1 &= ~1;
+
+				var left, top, width, height, vertical, images, body,
+					thickness = WallPrototype.thickness,
+					minSize = WallPrototype.minSize;
+
+				if (Math.abs(width = (x1 - x0)) < Math.abs(height = (y1 - y0))) {
+					// Vertical
+					vertical = true;
+					left = x0;
+					width = thickness;
+					if (height >= 0) {
+						if (height < minSize)
+							height = minSize;
+						top = y0;
+					} else {
+						height = -height;
+						if (height < minSize)
+							height = minSize;
+						top = y0 - height;
+					}
+				} else {
+					// Horizontal
+					vertical = false;
+					top = y0;
+					height = thickness;
+					if (width >= 0) {
+						if (width < minSize)
+							width = minSize;
+						left = x0;
+					} else {
+						width = -width;
+						if (width < minSize)
+							width = minSize;
+						left = x0 - width;
+					}
+				}
+
+				if (vertical !== this.vertical) {
+					this.recreate(scene, left, top, (vertical ? height : width), this.color, vertical);
+				} else {
+					left -= this.left;
+					top -= this.top;
+					if (left || top)
+						this.move(left, top);
+					if (vertical) {
+						height -= this.height;
+						if (height) {
+							(images = this.images)[3].y += height;
+							images[4].y += height;
+							height += this.height;
+							this.height = height;
+							this.bottom = this.top + height;
+							if (height <= minSize) {
+								images[2].setVisible(false);
+							} else {
+								(body = images[2]).setVisible(true);
+								body.y = this.top + (height >> 1);
+								body.setDisplaySize(WallPrototype.imageLargeDimension, height -= (thickness << 1));
+								body.setRectangle(thickness, height, { isStatic: true });
+							}
+						}
+					} else {
+						width -= this.width;
+						if (width) {
+							(images = this.images)[3].x += width;
+							images[4].x += width;
+							width += this.width;
+							this.width = width;
+							this.right = this.left + width;
+							if (width <= minSize) {
+								images[2].setVisible(false);
+							} else {
+								(body = images[2]).setVisible(true);
+								body.x = this.left + (width >> 1);
+								body.setDisplaySize(width -= (thickness << 1), WallPrototype.imageLargeDimension);
+								body.setRectangle(width, thickness, { isStatic: true });
+							}
+						}
+					}
+				}
+			},
+
+			move: function (dx, dy) {
+				this.left += dx;
+				this.top += dy;
+				this.right += dx;
+				this.bottom += dy;
+				var i, image, images = this.images;
+				for (i = images.length - 1; i >= 0; i--) {
+					image = images[i];
+					image.x += dx;
+					image.y += dy;
+				}
+			},
+
+			setAlpha: function (alpha) {
+				var i, image, images = this.images;
+				for (i = images.length - 1; i >= 0; i--) {
+					image = images[i];
+					image.setAlpha(alpha);
+				}
+			},
+
+			recreate: function (scene, l, t, s, c, vertical) {
+				// For sake of performance, assume all parameters contain valid values
+				var large = WallPrototype.imageLargeDimension,
+					thickness = WallPrototype.thickness,
+					thicknessHalf = thickness >> 1,
+					minSize = WallPrototype.minSize,
+					images = this.images;
+
+				if (s < minSize)
+					s = minSize;
+
+				var w = (vertical ? thickness : s),
+					wHalf = w >> 1,
+					h = (vertical ? s : thickness),
+					hHalf = h >> 1,
+					tmp,
+					capStartGlow = images[0], capStart = images[1],
+					body = images[2],
+					capEnd = images[3], capEndGlow = images[4];
+
+				l += wHalf;
+				t += hHalf;
+
+				if (vertical) {
+					capStartGlow.x = l;
+					capStartGlow.y = t - hHalf - thicknessHalf;
+					capStartGlow.setTexture("atlas", "wall_vg" + c);
+					capStart.x = l;
+					capStart.y = t - hHalf + thicknessHalf;
+					capStart.setTexture("atlas", "wall_vc" + c);
+					// See comment below...
+					//body.x = l;
+					//body.y = t;
+					//body.setTexture(keyPrefix + "v");
+					//body.setSize(large, tmp = Math.max(10, h - minSize));
+					//body.setRectangle(thickness, tmp, { isStatic: true });
+					capEnd.x = l;
+					capEnd.y = t + hHalf - thicknessHalf;
+					capEnd.setTexture("atlas", "wall_vc" + c);
+					capEnd.flipX = false;
+					capEnd.flipY = true;
+					capEndGlow.x = l;
+					capEndGlow.y = t + hHalf + thicknessHalf;
+					capEndGlow.setTexture("atlas", "wall_vg" + c);
+					capEndGlow.flipX = false;
+					capEndGlow.flipY = true;
+				} else {
+					capStartGlow.x = l - wHalf - thicknessHalf;
+					capStartGlow.y = t;
+					capStartGlow.setTexture("atlas", "wall_hg" + c);
+					capStart.x = l - wHalf + thicknessHalf;
+					capStart.y = t;
+					capStart.setTexture("atlas", "wall_hc" + c);
+					// See comment below...
+					//body.x = l;
+					//body.y = t;
+					//body.setTexture(keyPrefix + "h");
+					//body.setDisplaySize(tmp = Math.max(10, w - minSize), large);
+					//body.setRectangle(tmp, thickness, { isStatic: true });
+					capEnd.x = l + wHalf - thicknessHalf;
+					capEnd.y = t;
+					capEnd.setTexture("atlas", "wall_hc" + c);
+					capEnd.flipX = true;
+					capEnd.flipY = false;
+					capEndGlow.x = l + wHalf + thicknessHalf;
+					capEndGlow.y = t;
+					capEndGlow.setTexture("atlas", "wall_hg" + c);
+					capEndGlow.flipX = true;
+					capEndGlow.flipY = false;
+				}
+
+				// Weird things will happen to body during the next time adjust() runs if
+				// we simply change its properties... So it must actually be reacreated :(
+				body.destroy();
+				body = scene.add.image(l, t, "atlas", (vertical ? "wall_v" : "wall_h") + c)
+					.setBlendMode(Phaser.BlendModes.ADD);
+				body.wall = this;
+				if (vertical)
+					body.setDisplaySize(large, tmp = Math.max(10, h - minSize));
+				else
+					body.setDisplaySize(tmp = Math.max(10, w - minSize), large);
+				scene.matter.add.gameObject(
+					body,
+					(vertical ?
+						scene.matter.bodies.rectangle(l, t, thickness, tmp, { isStatic: true }) :
+						scene.matter.bodies.rectangle(l, t, tmp, thickness, { isStatic: true }))
+				);
+				body.setVisible(s > minSize);
+				images[2] = body;
+
+				this.left = l - wHalf;
+				this.top = t - hHalf;
+				this.right = l + wHalf;
+				this.bottom = t + hHalf;
+				this.width = w;
+				this.height = h;
+				this.vertical = vertical;
+				this.color = c;
+			},
+
+			destroy: function () {
+				UIObject.remove(this);
+
+				var i, image, images;
+				if ((images = this.images)) {
+					for (i = images.length - 1; i >= 0; i--) {
+						image = images[i];
+						image.wall = null;
+						image.destroy();
+						images[i] = null;
+					}
+					this.images = null;
+				}
+			}
+		};
+
+		// I'm not using Wall.prototype = { ... } for performance reasons
+		function Wall(scene, left, top, size, color, vertical) {
+			// Make sure left, top and height are even numbers
+			var l = (left & ~1),
+				t = (top & ~1),
+				s = (size & ~1),
+				large = WallPrototype.imageLargeDimension,
+				thickness = WallPrototype.thickness,
+				thicknessHalf = thickness >> 1,
+				minSize = WallPrototype.minSize,
+				c = Math.max(0, (color | 0) % 6);
+
+			if (s < minSize)
+				s = minSize;
+
+			var w = (vertical ? thickness : s),
+				wHalf = w >> 1,
+				h = (vertical ? s : thickness),
+				hHalf = h >> 1,
+				tmp,
+				capStartGlow, capStart, body, capEnd, capEndGlow;
+
+			l += wHalf;
+			t += hHalf;
+
+			capStartGlow = (vertical ?
+				scene.add.image(l, t - hHalf - thicknessHalf, "atlas", "wall_vg" + c) :
+				scene.add.image(l - wHalf - thicknessHalf, t, "atlas", "wall_hg" + c)
+			).setBlendMode(Phaser.BlendModes.ADD);
+			capStartGlow.wall = this;
+
+			capStart = (vertical ?
+				scene.add.image(l, t - hHalf + thicknessHalf, "atlas", "wall_vc" + c) :
+				scene.add.image(l - wHalf + thicknessHalf, t, "atlas", "wall_hc" + c)
+			).setBlendMode(Phaser.BlendModes.ADD);
+			capStart.wall = this;
+			scene.matter.add.gameObject(
+				capStart,
+				scene.matter.bodies.rectangle(capStart.x, capStart.y, thickness, thickness, { isStatic: true })
+			);
+
+			// scene.add.tileSprite ended up blurring the edges!
+			body = scene.add.image(l, t, "atlas", (vertical ? "wall_v" : "wall_h") + c)
+				.setBlendMode(Phaser.BlendModes.ADD);
+			body.wall = this;
+			if (vertical)
+				body.setDisplaySize(large, tmp = Math.max(10, h - minSize));
+			else
+				body.setDisplaySize(tmp = Math.max(10, w - minSize), large);
+			scene.matter.add.gameObject(
+				body,
+				(vertical ?
+					scene.matter.bodies.rectangle(l, t, thickness, tmp, { isStatic: true }) :
+					scene.matter.bodies.rectangle(l, t, tmp, thickness, { isStatic: true }))
+			);
+			body.setVisible(s > minSize);
+
+			capEnd = (vertical ?
+				scene.add.image(l, t + hHalf - thicknessHalf, "atlas", "wall_vc" + c) :
+				scene.add.image(l + wHalf - thicknessHalf, t, "atlas", "wall_hc" + c)
+			).setBlendMode(Phaser.BlendModes.ADD);
+			capEnd.wall = this;
+			if (vertical)
+				capEnd.flipY = true;
+			else
+				capEnd.flipX = true;
+			scene.matter.add.gameObject(
+				capEnd,
+				scene.matter.bodies.rectangle(capEnd.x, capEnd.y, thickness, thickness, { isStatic: true })
+			);
+
+			capEndGlow = (vertical ?
+				scene.add.image(l, t + hHalf + thicknessHalf, "atlas", "wall_vg" + c) :
+				scene.add.image(l + wHalf + thicknessHalf, t, "atlas", "wall_hg" + c)
+			).setBlendMode(Phaser.BlendModes.ADD);
+			capEndGlow.wall = this;
+			if (vertical)
+				capEndGlow.flipY = true;
+			else
+				capEndGlow.flipX = true;
+
+			this.objectType = UIObject.typeWall;
+			this.left = l - wHalf;
+			this.top = t - hHalf;
+			this.right = l + wHalf;
+			this.bottom = t + hHalf;
+			this.width = w;
+			this.height = h;
+			this.vertical = !!vertical;
+			this.color = c;
+			this.images = [capStartGlow, capStart, body, capEnd, capEndGlow];
+
+			// I'm copying the functions here, instead of using
+			// Wall.prototype = { ... }, for performance reasons
+			for (var n in WallFunctions)
+				this[n] = WallFunctions[n];
+		}
+
+		// I'm not using Ball.prototype = { ... } for performance reasons
+		var BallPrototype = {
+			maxAcc: 5,
+			maxVel: 8,
+			size: 40,
+			radius: 20,
+			binaryLength: 2 + 2,
+
+			deserialize: function (scene, o) {
+				return new Ball(scene, o.l | 0, o.t | 0);
+			},
+
+			deserializeBinary: function (offset, str, array) {
+				if ((offset + BallPrototype.binaryLength) > str.length)
+					return -1;
+
+				array.push({
+					l: ((str.charCodeAt(offset++) & 0xFF) | ((str.charCodeAt(offset++) & 0xFF) << 8)) * 5,
+					t: ((str.charCodeAt(offset++) & 0xFF) | ((str.charCodeAt(offset++) & 0xFF) << 8)) * 5
+				});
+
+				return offset;
+			}
+		};
+
+		// I'm not using Ball.prototype = { ... } for performance reasons
+		var BallFunctions = {
+			serialize: function () {
+				return {
+					l: this.left,
+					t: this.top
+				};
+			},
+
+			bytesNeeded: function () {
+				return BallPrototype.binaryLength;
+			},
+
+			serializeBinary: function (offset, array) {
+				var x;
+
+				array[offset] = (x = ((this.left / 5) | 0)) & 0xFF;
+				array[offset + 1] = x >>> 8;
+				array[offset + 2] = (x = ((this.top / 5) | 0)) & 0xFF;
+				array[offset + 3] = x >>> 8;
+
+				return this.bytesNeeded();
+			},
+
+			move: function (dx, dy) {
+				var left = this.left + dx,
+					top = this.top + dy,
+					image = this.image,
+					radius = BallPrototype.radius,
+					size = BallPrototype.size;
+				if (left < 0)
+					left = 0;
+				else if (left > (game.width - size))
+					left = game.width - size;
+				if (top < 0)
+					top = 0;
+				else if (top > (game.height - size))
+					top = game.height - size;
+				this.left = left;
+				this.top = top;
+				this.right = left + size;
+				this.bottom = top + size;
+				image.x = left + radius;
+				image.y = top + radius;
+			},
+
+			setAlpha: function (alpha) {
+				var image = this.image;
+				image.setAlpha(alpha);
+			},
+
+			reset: function (scene) {
+				var image = this.image, radius = BallPrototype.radius;
+
+				if (image)
+					image.destroy();
+
+				if (UIObject.editMode) {
+					image = scene.add.image(this.left + radius, this.top + radius, "atlas", "ball")
+						.setOrigin(0.5)
+						.setBlendMode(Phaser.BlendModes.ADD);
+				} else {
+					image = scene.matter.add.image(this.left + radius, this.top + radius, "atlas", "ball")
+						.setOrigin(0.5)
+						.setBlendMode(Phaser.BlendModes.ADD)
+						.setCircle(radius)
+						// I decided to remove the friction between the ball and solid objects
+						// because in theory, the ball is already rolling over a solid surface,
+						// even when not touching the walls... So I think it does not make sense
+						// to slow the ball down when sliding on the walls...
+						//.setFriction(0.03, 0.03, 0)
+						.setFriction(0, 0.03, 0)
+						.setIgnoreGravity(false)
+						.setMass(1)
+						.setBounce(0.8);
+					image.setVelocity(0, 0);
+					// See the comments inside collisionHandler()
+					image.body.a = 1;
+				}
+
+				this.image = image;
+			},
+
+			destroy: function () {
+				UIObject.remove(this);
+
+				var image;
+				if ((image = this.image)) {
+					image.destroy();
+					this.image = null;
+				}
+			}
+		};
+
+		// I'm not using Ball.prototype = { ... } for performance reasons
+		function Ball(scene, left, top) {
+			var size = BallPrototype.size;
+
+			this.objectType = UIObject.typeBall;
+			// Make sure left and top are integer numbers
+			this.left = left | 0;
+			this.top = top | 0;
+			this.right = this.left + size;
+			this.bottom = this.top + size;
+
+			// I'm copying the functions here, instead of using
+			// Ball.prototype = { ... }, for performance reasons
+			for (var n in BallFunctions)
+				this[n] = BallFunctions[n];
+
+			this.reset(scene);
+
+			// Just to validate the initial position
+			this.move(0, 0);
+		}
+
+		// I'm not using Bomb.prototype = { ... } for performance reasons
+		var BombPrototype = {
+			size: BallPrototype.size,
+			radius: BallPrototype.radius,
+			binaryLength: BallPrototype.binaryLength,
+
+			deserialize: function (scene, o) {
+				return new Bomb(scene, o.l | 0, o.t | 0);
+			},
+
+			deserializeBinary: BallPrototype.deserializeBinary
+		};
+
+		// I'm not using Bomb.prototype = { ... } for performance reasons
+		var BombFunctions = {
+			serialize: BallFunctions.serialize,
+
+			bytesNeeded: BallFunctions.bytesNeeded,
+
+			serializeBinary: BallFunctions.serializeBinary,
+
+			move: BallFunctions.move,
+
+			setAlpha: BallFunctions.setAlpha,
+
+			reset: function (scene) {
+				var image = this.image, radius = BombPrototype.radius;
+
+				if (image)
+					image.destroy();
+
+				image = scene.matter.add.image(this.left + radius, this.top + radius, "atlas", "bomb")
+					.setOrigin(0.5)
+					.setBlendMode(Phaser.BlendModes.ADD)
+					.setCircle((radius * 0.4) | 0) // Make it a bit more difficult to hit the bomb
+					.setStatic(true);
+				// See the comments inside collisionHandler()
+				image.body.a = 2;
+
+				this.image = image;
+			},
+
+			destroy: BallFunctions.destroy
+		};
+
+		// I'm not using Bomb.prototype = { ... } for performance reasons
+		function Bomb(scene, left, top) {
+			var size = BombPrototype.size;
+
+			this.objectType = UIObject.typeBomb;
+			// Make sure left and top are integer numbers
+			this.left = left | 0;
+			this.top = top | 0;
+			this.right = this.left + size;
+			this.bottom = this.top + size;
+
+			// I'm copying the functions here, instead of using
+			// Bomb.prototype = { ... }, for performance reasons
+			for (var n in BombFunctions)
+				this[n] = BombFunctions[n];
+
+			this.reset(scene);
+
+			// Just to validate the initial position
+			this.move(0, 0);
+		}
+
+		// I'm not using Cucumber.prototype = { ... } for performance reasons
+		var CucumberPrototype = {
+			size: BallPrototype.size,
+			radius: BallPrototype.radius,
+			binaryLength: BallPrototype.binaryLength,
+
+			deserialize: function (scene, o) {
+				return new Cucumber(scene, o.l | 0, o.t | 0);
+			},
+
+			deserializeBinary: BallPrototype.deserializeBinary
+		};
+
+		// I'm not using Cucumber.prototype = { ... } for performance reasons
+		var CucumberFunctions = {
+			serialize: BallFunctions.serialize,
+
+			bytesNeeded: BallFunctions.bytesNeeded,
+
+			serializeBinary: BallFunctions.serializeBinary,
+
+			move: BallFunctions.move,
+
+			setAlpha: BallFunctions.setAlpha,
+
+			reset: function (scene) {
+				var image = this.image, radius = CucumberPrototype.radius;
+
+				if (image)
+					image.destroy();
+
+				image = scene.matter.add.image(this.left + radius, this.top + radius, "atlas", "cucumber")
+					.setOrigin(0.5)
+					.setBlendMode(Phaser.BlendModes.ADD)
+					.setCircle((radius * 0.4) | 0) // Make it a bit more difficult to hit the cucumber
+					.setStatic(true);
+				// See the comments inside collisionHandler()
+				image.body.a = 8;
+
+				this.image = image;
+			},
+
+			destroy: BallFunctions.destroy
+		};
+
+		// I'm not using Cucumber.prototype = { ... } for performance reasons
+		function Cucumber(scene, left, top) {
+			var size = CucumberPrototype.size;
+
+			this.objectType = UIObject.typeCucumber;
+			// Make sure left and top are integer numbers
+			this.left = left | 0;
+			this.top = top | 0;
+			this.right = this.left + size;
+			this.bottom = this.top + size;
+
+			// I'm copying the functions here, instead of using
+			// Cucumber.prototype = { ... }, for performance reasons
+			for (var n in CucumberFunctions)
+				this[n] = CucumberFunctions[n];
+
+			this.reset(scene);
+
+			// Just to validate the initial position
+			this.move(0, 0);
+		}
+
+		// I'm not using Goal.prototype = { ... } for performance reasons
+		var GoalPrototype = {
+			size: BallPrototype.size,
+			radius: BallPrototype.radius,
+			binaryLength: BallPrototype.binaryLength,
+
+			deserialize: function (scene, o) {
+				return new Goal(scene, o.l | 0, o.t | 0);
+			},
+
+			deserializeBinary: BallPrototype.deserializeBinary
+		};
+
+		// I'm not using Goal.prototype = { ... } for performance reasons
+		var GoalFunctions = {
+			serialize: BallFunctions.serialize,
+
+			bytesNeeded: BallFunctions.bytesNeeded,
+
+			serializeBinary: BallFunctions.serializeBinary,
+
+			move: BallFunctions.move,
+
+			setAlpha: BallFunctions.setAlpha,
+
+			reset: function (scene) {
+				var image = this.image, radius = GoalPrototype.radius;
+
+				if (image) {
+					image.destroy();
+					image = null;
+				}
+
+				if (!UIObject.goalsAvailable && !UIObject.editMode)
+					return;
+
+				image = scene.matter.add.image(this.left + radius, this.top + radius, "atlas", "goal")
+					.setOrigin(0.5)
+					.setBlendMode(Phaser.BlendModes.ADD)
+					.setCircle((radius * 0.4) | 0) // Make it a bit more difficult to hit the goal
+					.setStatic(true);
+				// See the comments inside collisionHandler()
+				image.body.a = 4;
+
+				this.image = image;
+			},
+
+			destroy: BallFunctions.destroy
+		};
+
+		// I'm not using Goal.prototype = { ... } for performance reasons
+		function Goal(scene, left, top) {
+			var size = GoalPrototype.size;
+
+			this.objectType = UIObject.typeGoal;
+			// Make sure left and top are integer numbers
+			this.left = left | 0;
+			this.top = top | 0;
+			this.right = this.left + size;
+			this.bottom = this.top + size;
+
+			// I'm copying the functions here, instead of using
+			// Goal.prototype = { ... }, for performance reasons
+			for (var n in GoalFunctions)
+				this[n] = GoalFunctions[n];
+
+			this.reset(scene);
+
+			// Just to validate the initial position
+			if (this.image)
+				this.move(0, 0);
+		}
+
+		var Tool = {
+			actionMove: 0,
+			actionDrawWall: 1,
+			actionDrawBall: 2,
+			actionDrawBomb: 3,
+			actionDrawCucumber: 4,
+			actionDrawGoal: 5,
+			actionRemove: 6,
+
+			trackpadMode: false,
+			trackpadOngoing: false,
+			trackpadFreeToMove: false,
+			trackpadX: 0,
+			trackpadY: 0,
+			trackpadLastX: 0,
+			trackpadLastY: 0,
+			trackpadInitialX: 0,
+			trackpadInitialY: 0,
+
+			lastObj: null,
+			lastX: 0,
+			lastY: 0,
+			firstLeft: 0,
+			firstTop: 0,
+			lastLeft: 0,
+			lastTop: 0,
+			deltaLeft: 0,
+			deltaTop: 0,
+			lastSize: 0,
+
+			currentAction: 0,
+			currentColor: 0,
+
+			setTrackpadMode: function (trackpadMode) {
+				this.trackpadMode = !!trackpadMode;
+
+				this.handlePointerDown = (trackpadMode ? this.handlePointerDownTrackpad : this.handlePointerDownRegular);
+				this.handlePointerMove = (trackpadMode ? this.handlePointerMoveTrackpad : this.handlePointerMoveRegular);
+				this.handlePointerUp = (trackpadMode ? this.handlePointerUpTrackpad : this.handlePointerUpRegular);
+			},
+
+			handlePointerDownRegular: function (scene, x, y) {
+				var obj;
+
+				this.lastX = x;
+				this.lastY = y;
+
+				switch (this.currentAction) {
+					case this.actionMove:
+						if ((obj = UIObject.getAt(x, y))) {
+							UIObject.dirty = true;
+							this.lastObj = obj;
+							this.lastLeft = obj.left;
+							this.lastTop = obj.top;
+							if (obj.objectType === UIObject.typeWall) {
+								this.deltaLeft = obj.left - _10(x);
+								this.deltaTop = obj.top - _10(y);
+							} else {
+								this.deltaLeft = obj.left - _5(x);
+								this.deltaTop = obj.top - _5(y);
+							}
+							tweenBlink(scene, obj.images || (obj.image ? [obj.image] : [obj]), null, 300);
+						}
+						break;
+					case this.actionDrawWall:
+						UIObject.dirty = true;
+						this.firstLeft = _10(x);
+						this.firstTop = _10(y);
+						this.lastLeft = this.firstLeft;
+						this.lastTop = this.firstTop;
+						this.lastSize = 0;
+						UIObject.add(this.lastObj = new Wall(scene, this.firstLeft, this.firstTop, 0, this.currentColor, true));
+						break;
+					case this.actionDrawBall:
+					case this.actionDrawBomb:
+					case this.actionDrawCucumber:
+					case this.actionDrawGoal:
+						UIObject.dirty = true;
+						this.firstLeft = _5(x);
+						this.firstTop = _5(y);
+						UIObject.add(obj = ((this.currentAction === this.actionDrawBall) ? new Ball(scene, this.firstLeft - BallPrototype.radius, this.firstTop - BallPrototype.radius) : ((this.currentAction === this.actionDrawBomb) ? new Bomb(scene, this.firstLeft - BombPrototype.radius, this.firstTop - BombPrototype.radius) : ((this.currentAction === this.actionDrawCucumber) ? new Cucumber(scene, this.firstLeft - CucumberPrototype.radius, this.firstTop - CucumberPrototype.radius) : new Goal(scene, this.firstLeft - GoalPrototype.radius, this.firstTop - GoalPrototype.radius)))));
+						this.lastObj = obj;
+						this.lastLeft = obj.left;
+						this.lastTop = obj.top;
+						this.deltaLeft = obj.left - this.firstLeft;
+						this.deltaTop = obj.top - this.firstTop;
+						break;
+					case this.actionRemove:
+						if ((obj = UIObject.getAt(x, y))) {
+							this.lastObj = obj;
+							obj.setAlpha(0.25);
+						}
+						break;
+				}
+			},
+
+			handlePointerMoveRegular: function (scene, x, y) {
+				var obj, left, top;
+
+				if (x === this.lastX && y === this.lastY)
+					return;
+
+				this.lastX = x;
+				this.lastY = y;
+
+				switch (this.currentAction) {
+					case this.actionMove:
+					case this.actionDrawBall:
+					case this.actionDrawBomb:
+					case this.actionDrawCucumber:
+					case this.actionDrawGoal:
+						if (!(obj = this.lastObj))
+							break;
+						if (obj.objectType === UIObject.typeWall) {
+							left = this.deltaLeft + _10(x);
+							top = this.deltaTop + _10(y);
+						} else {
+							left = this.deltaLeft + _5(x);
+							top = this.deltaTop + _5(y);
+						}
+						if (left === this.lastLeft && top === this.lastTop)
+							break;
+						obj.move(left - this.lastLeft, top - this.lastTop);
+						this.lastLeft = left;
+						this.lastTop = top;
+						break;
+					case this.actionDrawWall:
+						if (!(obj = this.lastObj))
+							break;
+						left = _10((x < this.firstLeft) ? x : (x + 10));
+						top = _10((y < this.firstTop) ? y : (y + 10));
+						if (left === this.lastLeft && top === this.lastTop)
+							break;
+						obj.adjust(scene, this.firstLeft, this.firstTop, left, top);
+						this.lastLeft = left;
+						this.lastTop = top;
+						break;
+					case this.actionRemove:
+						obj = UIObject.getAt(x, y);
+						if (this.lastObj !== obj) {
+							if (this.lastObj)
+								this.lastObj.setAlpha(1);
+							if (obj)
+								obj.setAlpha(0.25);
+							this.lastObj = obj;
+						}
+						break;
+				}
+			},
+
+			handlePointerUpRegular: function (scene, x, y) {
+				var obj;
+
+				switch (this.currentAction) {
+					case this.actionRemove:
+						obj = UIObject.getAt(x, y);
+						if (this.lastObj)
+							this.lastObj.setAlpha(1);
+						if (obj) {
+							UIObject.dirty = true;
+							obj.destroy();
+						}
+						break;
+				}
+				this.lastObj = null;
+			},
+
+			handlePointerDownTrackpad: function (scene, x, y) {
+				this.trackpadFreeToMove = false;
+				this.trackpadLastX = x;
+				this.trackpadLastY = y;
+				this.trackpadInitialX = x;
+				this.trackpadInitialY = y;
+			},
+
+			handlePointerMoveTrackpad: function (scene, x, y) {
+				if (x === this.trackpadLastX && y === this.trackpadLastY)
+					return;
+
+				if (!this.trackpadFreeToMove) {
+					// Filter small movements in favor of actual clicks
+					if (Math.abs(x - this.trackpadInitialX) >= 10 ||
+						Math.abs(y - this.trackpadInitialY) >= 10) {
+						this.trackpadFreeToMove = true;
+						this.trackpadLastX = x;
+						this.trackpadLastY = y;
+					}
+					return;
+				}
+
+				var tx, ty;
+
+				tx = this.trackpadX + x - this.trackpadLastX;
+				ty = this.trackpadY + y - this.trackpadLastY;
+
+				this.trackpadLastX = x;
+				this.trackpadLastY = y;
+
+				if (tx < 0)
+					tx = 0;
+				else if (tx >= game.width)
+					tx = game.width - 1;
+				if (ty < 0)
+					ty = 0;
+				else if (ty >= game.height)
+					ty = game.height - 1;
+
+				this.trackpadX = tx;
+				this.trackpadY = ty;
+
+				if (this.trackpadOngoing)
+					this.handlePointerMoveRegular(scene, tx, ty);
+			},
+
+			handlePointerUpTrackpad: function (scene, x, y) {
+				// For an action to take place, the cursor must not have moved too much...
+				if (this.trackpadFreeToMove)
+					return;
+
+				switch (this.currentAction) {
+					case this.actionMove:
+					case this.actionDrawWall:
+						if (this.trackpadOngoing) {
+							this.trackpadOngoing = false;
+							this.handlePointerUpRegular(scene, this.trackpadX, this.trackpadY);
+						} else {
+							this.trackpadOngoing = true;
+							this.handlePointerDownRegular(scene, this.trackpadX, this.trackpadY);
+						}
+						break;
+					case this.actionDrawBall:
+					case this.actionDrawBomb:
+					case this.actionDrawCucumber:
+					case this.actionDrawGoal:
+					case this.actionRemove:
+						// Simulate an actual click
+						this.handlePointerDownRegular(scene, this.trackpadX, this.trackpadY);
+						this.handlePointerUpRegular(scene, this.trackpadX, this.trackpadY);
+						break;
+				}
+			},
+
+			handlePointerDown: null,
+
+			handlePointerMove: null,
+
+			handlePointerUp: null
+		};
+
+		var Level = {
+			levels: [
+				'{"o":[{"l":810,"t":90,"s":450,"c":0,"v":false},{"l":1220,"t":90,"s":220,"c":0,"v":true},{"l":810,"t":90,"s":220,"c":0,"v":true},{"l":810,"t":270,"s":200,"c":0,"v":false},{"l":1060,"t":270,"s":200,"c":0,"v":false},{"l":1060,"t":270,"s":450,"c":0,"v":true},{"l":260,"t":250,"s":90,"c":2,"v":true},{"l":50,"t":0,"s":340,"c":0,"v":true},{"l":620,"t":170,"s":300,"c":2,"v":true},{"l":970,"t":270,"s":370,"c":0,"v":true},{"l":400,"t":560,"s":160,"c":0,"v":true},{"l":50,"t":560,"s":390,"c":0,"v":false},{"l":50,"t":300,"s":250,"c":0,"v":false},{"l":50,"t":430,"s":610,"c":0,"v":false},{"l":620,"t":600,"s":390,"c":0,"v":false},{"l":620,"t":430,"s":210,"c":0,"v":true},{"l":260,"t":250,"s":150,"c":2,"v":false},{"l":370,"t":170,"s":120,"c":2,"v":true},{"l":370,"t":170,"s":290,"c":2,"v":false}],"g":[{"l":1015,"t":185}],"b":[{"l":445,"t":675},{"l":560,"t":230}],"c":[],"a":[{"l":5,"t":5}]}',
+				'{"o":[{"l":1020,"t":0,"s":80,"c":1,"v":true},{"l":1200,"t":420,"s":80,"c":4,"v":true},{"l":1170,"t":210,"s":80,"c":2,"v":false},{"l":110,"t":270,"s":80,"c":5,"v":true},{"l":1030,"t":260,"s":80,"c":5,"v":true},{"l":620,"t":560,"s":80,"c":5,"v":false},{"l":330,"t":170,"s":80,"c":3,"v":true},{"l":650,"t":130,"s":80,"c":3,"v":true},{"l":740,"t":430,"s":80,"c":3,"v":true},{"l":510,"t":230,"s":80,"c":4,"v":true},{"l":150,"t":470,"s":80,"c":4,"v":false},{"l":920,"t":80,"s":80,"c":0,"v":true},{"l":530,"t":50,"s":80,"c":0,"v":true},{"l":660,"t":300,"s":80,"c":0,"v":false},{"l":350,"t":440,"s":80,"c":0,"v":true},{"l":860,"t":320,"s":80,"c":2,"v":true},{"l":330,"t":0,"s":80,"c":2,"v":false},{"l":280,"t":330,"s":80,"c":2,"v":false},{"l":970,"t":470,"s":80,"c":1,"v":true},{"l":770,"t":40,"s":80,"c":1,"v":true},{"l":490,"t":430,"s":80,"c":1,"v":false},{"l":190,"t":100,"s":80,"c":0,"v":true},{"l":330,"t":650,"s":80,"c":4,"v":false},{"l":570,"t":640,"s":80,"c":2,"v":true}],"g":[{"l":1145,"t":80}],"b":[{"l":330,"t":265},{"l":740,"t":525},{"l":650,"t":225},{"l":1220,"t":20},{"l":1200,"t":300},{"l":170,"t":650},{"l":1000,"t":660}],"c":[],"a":[{"l":1065,"t":555},{"l":905,"t":230},{"l":1050,"t":400},{"l":95,"t":550},{"l":45,"t":100},{"l":125,"t":385},{"l":425,"t":330},{"l":440,"t":560},{"l":255,"t":550},{"l":215,"t":225},{"l":250,"t":25},{"l":805,"t":200},{"l":650,"t":15},{"l":435,"t":145},{"l":615,"t":380},{"l":825,"t":505},{"l":110,"t":20},{"l":270,"t":400},{"l":440,"t":30},{"l":340,"t":90},{"l":1200,"t":650},{"l":900,"t":590},{"l":860,"t":20},{"l":570,"t":510},{"l":1030,"t":160},{"l":20,"t":340},{"l":780,"t":670}]}',
+				'{"o":[{"l":1080,"t":610,"s":80,"c":2,"v":false},{"l":840,"t":680,"s":80,"c":2,"v":false},{"l":600,"t":610,"s":80,"c":2,"v":false},{"l":360,"t":680,"s":80,"c":2,"v":false},{"l":180,"t":80,"s":1020,"c":1,"v":false},{"l":320,"t":380,"s":230,"c":4,"v":true},{"l":0,"t":260,"s":300,"c":0,"v":false},{"l":260,"t":80,"s":220,"c":0,"v":true},{"l":1160,"t":80,"s":410,"c":2,"v":true},{"l":920,"t":80,"s":410,"c":0,"v":true},{"l":680,"t":80,"s":410,"c":0,"v":true},{"l":440,"t":80,"s":410,"c":0,"v":true},{"l":560,"t":210,"s":400,"c":4,"v":true},{"l":800,"t":210,"s":400,"c":4,"v":true},{"l":1040,"t":210,"s":400,"c":4,"v":true},{"l":320,"t":570,"s":960,"c":3,"v":false}],"g":[{"l":1220,"t":660}],"b":[{"l":140,"t":640},{"l":100,"t":340},{"l":100,"t":540},{"l":140,"t":440},{"l":1220,"t":20}],"c":[{"l":1100,"t":145},{"l":860,"t":145},{"l":620,"t":145},{"l":380,"t":145}],"a":[{"l":200,"t":200},{"l":155,"t":200},{"l":110,"t":200},{"l":65,"t":200},{"l":20,"t":200},{"l":155,"t":155},{"l":110,"t":155},{"l":65,"t":155},{"l":20,"t":155},{"l":110,"t":110},{"l":65,"t":110},{"l":20,"t":110},{"l":65,"t":65},{"l":20,"t":65},{"l":20,"t":20}]}',
+				'{"o":[{"l":1000,"t":0,"s":720,"c":5,"v":true},{"l":240,"t":0,"s":720,"c":5,"v":true},{"l":480,"t":190,"s":320,"c":4,"v":true},{"l":240,"t":340,"s":280,"c":1,"v":false},{"l":480,"t":190,"s":300,"c":2,"v":false},{"l":830,"t":190,"s":210,"c":3,"v":false},{"l":480,"t":0,"s":140,"c":0,"v":true},{"l":680,"t":190,"s":260,"c":4,"v":true},{"l":580,"t":310,"s":410,"c":0,"v":true},{"l":760,"t":510,"s":280,"c":4,"v":false},{"l":480,"t":560,"s":160,"c":2,"v":true}],"g":[{"l":290,"t":390}],"b":[{"l":430,"t":10},{"l":320,"t":665},{"l":900,"t":390},{"l":680,"t":640}],"c":[],"a":[{"l":430,"t":290}]}',
+				'{"o":[{"l":830,"t":290,"s":120,"c":5,"v":false},{"l":870,"t":330,"s":90,"c":5,"v":true},{"l":710,"t":0,"s":400,"c":0,"v":true},{"l":790,"t":460,"s":120,"c":3,"v":false},{"l":750,"t":500,"s":160,"c":3,"v":false},{"l":830,"t":420,"s":80,"c":3,"v":false},{"l":720,"t":580,"s":190,"c":4,"v":false},{"l":680,"t":540,"s":270,"c":4,"v":false},{"l":560,"t":420,"s":90,"c":1,"v":false},{"l":530,"t":460,"s":150,"c":1,"v":false},{"l":500,"t":500,"s":210,"c":1,"v":false},{"l":470,"t":580,"s":80,"c":2,"v":false},{"l":450,"t":540,"s":120,"c":2,"v":false},{"l":280,"t":500,"s":170,"c":0,"v":false},{"l":1000,"t":0,"s":720,"c":5,"v":true},{"l":240,"t":0,"s":720,"c":5,"v":true},{"l":410,"t":80,"s":420,"c":0,"v":true}],"g":[{"l":290,"t":550}],"b":[{"l":810,"t":90},{"l":950,"t":10},{"l":560,"t":370},{"l":530,"t":80},{"l":460,"t":80}],"c":[],"a":[{"l":360,"t":450}]}',
+				'{"o":[{"l":960,"t":540,"s":160,"c":0,"v":false},{"l":980,"t":0,"s":80,"c":2,"v":true},{"l":870,"t":220,"s":170,"c":0,"v":false},{"l":870,"t":220,"s":110,"c":2,"v":true},{"l":630,"t":210,"s":170,"c":0,"v":false},{"l":630,"t":320,"s":160,"c":0,"v":false},{"l":1100,"t":440,"s":180,"c":0,"v":false},{"l":540,"t":630,"s":150,"c":0,"v":false},{"l":840,"t":680,"s":160,"c":0,"v":false},{"l":970,"t":640,"s":80,"c":2,"v":true},{"l":740,"t":530,"s":100,"c":2,"v":true},{"l":760,"t":120,"s":130,"c":2,"v":true},{"l":960,"t":130,"s":180,"c":0,"v":false},{"l":1180,"t":610,"s":100,"c":0,"v":false},{"l":990,"t":310,"s":150,"c":2,"v":true},{"l":990,"t":310,"s":200,"c":0,"v":false},{"l":870,"t":420,"s":160,"c":0,"v":false},{"l":1080,"t":540,"s":180,"c":2,"v":true},{"l":510,"t":90,"s":180,"c":0,"v":false},{"l":50,"t":210,"s":150,"c":0,"v":false},{"l":1100,"t":210,"s":180,"c":0,"v":false},{"l":1100,"t":60,"s":190,"c":2,"v":true},{"l":1190,"t":0,"s":140,"c":2,"v":true},{"l":510,"t":90,"s":110,"c":2,"v":true},{"l":340,"t":380,"s":80,"c":0,"v":false},{"l":740,"t":530,"s":170,"c":0,"v":false},{"l":870,"t":420,"s":150,"c":2,"v":true},{"l":440,"t":540,"s":250,"c":0,"v":false},{"l":50,"t":100,"s":130,"c":0,"v":false},{"l":760,"t":120,"s":130,"c":0,"v":false},{"l":60,"t":340,"s":230,"c":0,"v":false},{"l":60,"t":550,"s":210,"c":0,"v":false},{"l":230,"t":460,"s":130,"c":2,"v":true},{"l":60,"t":460,"s":130,"c":2,"v":true},{"l":160,"t":210,"s":170,"c":2,"v":true},{"l":50,"t":0,"s":140,"c":2,"v":true},{"l":140,"t":0,"s":140,"c":2,"v":true},{"l":330,"t":490,"s":230,"c":2,"v":true},{"l":270,"t":250,"s":300,"c":0,"v":false},{"l":270,"t":70,"s":150,"c":0,"v":false},{"l":390,"t":160,"s":160,"c":0,"v":false},{"l":630,"t":210,"s":240,"c":2,"v":true},{"l":470,"t":410,"s":200,"c":0,"v":false},{"l":440,"t":640,"s":80,"c":2,"v":true},{"l":270,"t":70,"s":220,"c":2,"v":true},{"l":650,"t":0,"s":130,"c":2,"v":true},{"l":650,"t":540,"s":130,"c":2,"v":true},{"l":850,"t":50,"s":110,"c":2,"v":true},{"l":740,"t":50,"s":150,"c":0,"v":false}],"g":[{"l":1235,"t":5}],"b":[{"l":275,"t":670},{"l":1230,"t":490},{"l":695,"t":375}],"c":[],"a":[{"l":5,"t":5}]}',
+				'{"o":[{"l":740,"t":50,"s":150,"c":0,"v":false},{"l":850,"t":50,"s":110,"c":2,"v":true},{"l":650,"t":540,"s":130,"c":2,"v":true},{"l":650,"t":0,"s":130,"c":2,"v":true},{"l":270,"t":70,"s":220,"c":2,"v":true},{"l":440,"t":640,"s":80,"c":2,"v":true},{"l":470,"t":410,"s":200,"c":0,"v":false},{"l":630,"t":210,"s":240,"c":2,"v":true},{"l":390,"t":160,"s":160,"c":0,"v":false},{"l":270,"t":70,"s":150,"c":0,"v":false},{"l":270,"t":250,"s":300,"c":0,"v":false},{"l":330,"t":490,"s":230,"c":2,"v":true},{"l":140,"t":0,"s":140,"c":2,"v":true},{"l":50,"t":0,"s":140,"c":2,"v":true},{"l":160,"t":210,"s":170,"c":2,"v":true},{"l":60,"t":460,"s":130,"c":2,"v":true},{"l":230,"t":460,"s":130,"c":2,"v":true},{"l":60,"t":550,"s":210,"c":0,"v":false},{"l":60,"t":340,"s":230,"c":0,"v":false},{"l":760,"t":120,"s":130,"c":0,"v":false},{"l":50,"t":100,"s":130,"c":0,"v":false},{"l":440,"t":540,"s":250,"c":0,"v":false},{"l":870,"t":420,"s":150,"c":2,"v":true},{"l":740,"t":530,"s":170,"c":0,"v":false},{"l":340,"t":380,"s":80,"c":0,"v":false},{"l":510,"t":90,"s":110,"c":2,"v":true},{"l":1190,"t":0,"s":140,"c":2,"v":true},{"l":1100,"t":60,"s":190,"c":2,"v":true},{"l":1100,"t":210,"s":180,"c":0,"v":false},{"l":50,"t":210,"s":150,"c":0,"v":false},{"l":510,"t":90,"s":180,"c":0,"v":false},{"l":1080,"t":540,"s":180,"c":2,"v":true},{"l":870,"t":420,"s":160,"c":0,"v":false},{"l":990,"t":310,"s":200,"c":0,"v":false},{"l":990,"t":310,"s":150,"c":2,"v":true},{"l":1180,"t":610,"s":100,"c":0,"v":false},{"l":960,"t":130,"s":180,"c":0,"v":false},{"l":760,"t":120,"s":130,"c":2,"v":true},{"l":740,"t":530,"s":100,"c":2,"v":true},{"l":970,"t":640,"s":80,"c":2,"v":true},{"l":840,"t":680,"s":160,"c":0,"v":false},{"l":540,"t":630,"s":150,"c":0,"v":false},{"l":1100,"t":440,"s":180,"c":0,"v":false},{"l":630,"t":320,"s":160,"c":0,"v":false},{"l":630,"t":210,"s":170,"c":0,"v":false},{"l":870,"t":220,"s":110,"c":2,"v":true},{"l":870,"t":220,"s":170,"c":0,"v":false},{"l":980,"t":0,"s":80,"c":2,"v":true},{"l":960,"t":540,"s":160,"c":0,"v":false}],"g":[{"l":1235,"t":5}],"b":[{"l":275,"t":670},{"l":320,"t":200},{"l":480,"t":460},{"l":915,"t":35}],"c":[{"l":940,"t":370},{"l":360,"t":330},{"l":775,"t":5},{"l":1230,"t":560}],"a":[{"l":280,"t":490},{"l":5,"t":5},{"l":510,"t":20},{"l":210,"t":290},{"l":570,"t":360},{"l":140,"t":500},{"l":310,"t":20},{"l":700,"t":160},{"l":95,"t":275},{"l":180,"t":620}]}',
+				'{"o":[{"l":500,"t":80,"s":150,"c":0,"v":true},{"l":740,"t":80,"s":80,"c":0,"v":true},{"l":580,"t":330,"s":80,"c":0,"v":true},{"l":430,"t":340,"s":80,"c":0,"v":false},{"l":620,"t":0,"s":80,"c":0,"v":true},{"l":280,"t":340,"s":80,"c":0,"v":false},{"l":280,"t":80,"s":80,"c":0,"v":false},{"l":360,"t":640,"s":80,"c":0,"v":true},{"l":660,"t":640,"s":80,"c":0,"v":true},{"l":580,"t":290,"s":80,"c":0,"v":false},{"l":740,"t":200,"s":120,"c":0,"v":true},{"l":880,"t":120,"s":120,"c":0,"v":true},{"l":920,"t":550,"s":80,"c":0,"v":false},{"l":920,"t":200,"s":80,"c":0,"v":false},{"l":1000,"t":0,"s":720,"c":5,"v":true},{"l":240,"t":0,"s":720,"c":5,"v":true},{"l":540,"t":160,"s":340,"c":0,"v":false},{"l":430,"t":230,"s":110,"c":0,"v":false},{"l":550,"t":540,"s":80,"c":0,"v":true},{"l":810,"t":490,"s":80,"c":0,"v":true},{"l":680,"t":400,"s":100,"c":0,"v":true},{"l":410,"t":500,"s":340,"c":0,"v":false},{"l":920,"t":300,"s":80,"c":0,"v":false}],"g":[{"l":950,"t":250}],"b":[],"c":[{"l":620,"t":245},{"l":525,"t":340},{"l":375,"t":340},{"l":385,"t":210},{"l":830,"t":5},{"l":575,"t":5},{"l":785,"t":205},{"l":300,"t":20},{"l":695,"t":115},{"l":720,"t":345},{"l":300,"t":660},{"l":550,"t":625},{"l":760,"t":500},{"l":365,"t":500},{"l":595,"t":545},{"l":705,"t":640},{"l":940,"t":660},{"l":830,"t":445}],"a":[{"l":940,"t":140}]}',
+				'{"o":[{"l":50,"t":630,"s":180,"c":2,"v":false},{"l":120,"t":450,"s":190,"c":4,"v":true},{"l":50,"t":420,"s":180,"c":2,"v":false},{"l":320,"t":130,"s":150,"c":1,"v":false},{"l":460,"t":10,"s":160,"c":0,"v":true},{"l":320,"t":10,"s":150,"c":2,"v":false},{"l":290,"t":10,"s":160,"c":4,"v":true},{"l":350,"t":560,"s":120,"c":0,"v":false},{"l":320,"t":490,"s":180,"c":5,"v":true},{"l":460,"t":490,"s":180,"c":5,"v":true},{"l":170,"t":130,"s":110,"c":0,"v":true},{"l":30,"t":130,"s":110,"c":0,"v":true},{"l":30,"t":230,"s":180,"c":1,"v":false},{"l":30,"t":100,"s":180,"c":1,"v":false},{"l":700,"t":520,"s":120,"c":4,"v":true},{"l":830,"t":520,"s":120,"c":1,"v":true},{"l":700,"t":630,"s":170,"c":2,"v":false},{"l":700,"t":490,"s":170,"c":2,"v":false},{"l":660,"t":120,"s":100,"c":0,"v":false},{"l":640,"t":320,"s":110,"c":4,"v":true},{"l":580,"t":420,"s":160,"c":0,"v":false},{"l":580,"t":290,"s":160,"c":0,"v":false},{"l":1110,"t":340,"s":140,"c":1,"v":true},{"l":960,"t":340,"s":140,"c":2,"v":true},{"l":1210,"t":30,"s":100,"c":0,"v":true},{"l":1080,"t":30,"s":100,"c":0,"v":true},{"l":750,"t":50,"s":180,"c":1,"v":true},{"l":630,"t":50,"s":180,"c":1,"v":true},{"l":1110,"t":90,"s":110,"c":2,"v":false},{"l":1110,"t":30,"s":110,"c":2,"v":false},{"l":990,"t":440,"s":130,"c":4,"v":false},{"l":990,"t":340,"s":130,"c":4,"v":false},{"l":1030,"t":510,"s":130,"c":3,"v":false},{"l":1040,"t":570,"s":130,"c":3,"v":false},{"l":1050,"t":630,"s":130,"c":3,"v":false}],"g":[{"l":60,"t":30}],"b":[{"l":200,"t":340},{"l":440,"t":260},{"l":230,"t":465},{"l":560,"t":670},{"l":520,"t":260},{"l":820,"t":50},{"l":1140,"t":160},{"l":1225,"t":160},{"l":1200,"t":300}],"c":[{"l":910,"t":350},{"l":390,"t":510}],"a":[{"l":1210,"t":650}]}',
+				'{"o":[{"l":50,"t":10,"s":80,"c":0,"v":true},{"l":50,"t":100,"s":80,"c":0,"v":true},{"l":50,"t":230,"s":80,"c":0,"v":true},{"l":50,"t":320,"s":80,"c":0,"v":true},{"l":50,"t":450,"s":80,"c":0,"v":true},{"l":50,"t":540,"s":80,"c":0,"v":true},{"l":50,"t":630,"s":80,"c":0,"v":true},{"l":140,"t":50,"s":80,"c":1,"v":true},{"l":140,"t":160,"s":80,"c":1,"v":true},{"l":140,"t":590,"s":80,"c":1,"v":true},{"l":140,"t":490,"s":80,"c":1,"v":true},{"l":140,"t":270,"s":80,"c":1,"v":true},{"l":140,"t":380,"s":80,"c":1,"v":true},{"l":230,"t":20,"s":80,"c":2,"v":true},{"l":230,"t":120,"s":80,"c":2,"v":true},{"l":230,"t":550,"s":80,"c":2,"v":true},{"l":230,"t":640,"s":80,"c":2,"v":true},{"l":230,"t":460,"s":80,"c":2,"v":true},{"l":320,"t":50,"s":80,"c":3,"v":true},{"l":320,"t":160,"s":80,"c":3,"v":true},{"l":320,"t":290,"s":80,"c":3,"v":true},{"l":320,"t":420,"s":80,"c":3,"v":true},{"l":320,"t":510,"s":80,"c":3,"v":true},{"l":320,"t":640,"s":80,"c":3,"v":true},{"l":140,"t":310,"s":90,"c":1,"v":false},{"l":230,"t":310,"s":90,"c":2,"v":false},{"l":320,"t":180,"s":90,"c":3,"v":false},{"l":320,"t":310,"s":90,"c":3,"v":false},{"l":320,"t":440,"s":90,"c":3,"v":false},{"l":410,"t":10,"s":80,"c":4,"v":true},{"l":410,"t":140,"s":80,"c":4,"v":true},{"l":410,"t":310,"s":90,"c":4,"v":false},{"l":410,"t":420,"s":80,"c":4,"v":true},{"l":410,"t":550,"s":80,"c":4,"v":true},{"l":410,"t":640,"s":80,"c":4,"v":true},{"l":500,"t":20,"s":80,"c":5,"v":true},{"l":500,"t":110,"s":80,"c":5,"v":true},{"l":410,"t":270,"s":120,"c":4,"v":true},{"l":230,"t":250,"s":160,"c":2,"v":true},{"l":500,"t":240,"s":180,"c":5,"v":true},{"l":500,"t":470,"s":80,"c":5,"v":true},{"l":500,"t":600,"s":80,"c":5,"v":true},{"l":500,"t":490,"s":90,"c":5,"v":false},{"l":500,"t":310,"s":90,"c":5,"v":false},{"l":590,"t":10,"s":80,"c":0,"v":true},{"l":590,"t":140,"s":80,"c":0,"v":true},{"l":590,"t":400,"s":130,"c":0,"v":true},{"l":590,"t":560,"s":80,"c":0,"v":true},{"l":590,"t":270,"s":80,"c":0,"v":true},{"l":590,"t":160,"s":90,"c":0,"v":false},{"l":590,"t":580,"s":90,"c":0,"v":false},{"l":680,"t":30,"s":80,"c":1,"v":true},{"l":680,"t":140,"s":80,"c":1,"v":true},{"l":680,"t":240,"s":80,"c":1,"v":true},{"l":680,"t":340,"s":80,"c":1,"v":true},{"l":680,"t":440,"s":80,"c":1,"v":true},{"l":680,"t":540,"s":120,"c":1,"v":true},{"l":770,"t":10,"s":80,"c":2,"v":true},{"l":770,"t":100,"s":80,"c":2,"v":true},{"l":770,"t":230,"s":80,"c":2,"v":true},{"l":770,"t":320,"s":80,"c":2,"v":true},{"l":770,"t":450,"s":80,"c":2,"v":true},{"l":770,"t":540,"s":80,"c":2,"v":true},{"l":770,"t":630,"s":80,"c":2,"v":true},{"l":770,"t":250,"s":90,"c":2,"v":false},{"l":770,"t":340,"s":90,"c":2,"v":false},{"l":860,"t":120,"s":80,"c":3,"v":true},{"l":860,"t":-10,"s":80,"c":3,"v":true},{"l":860,"t":250,"s":130,"c":3,"v":true},{"l":860,"t":140,"s":90,"c":3,"v":false},{"l":860,"t":400,"s":80,"c":3,"v":true},{"l":860,"t":500,"s":80,"c":3,"v":true},{"l":860,"t":630,"s":80,"c":3,"v":true},{"l":950,"t":270,"s":80,"c":4,"v":true},{"l":950,"t":50,"s":170,"c":4,"v":true},{"l":1040,"t":0,"s":80,"c":5,"v":true},{"l":1040,"t":90,"s":80,"c":5,"v":true},{"l":1040,"t":180,"s":80,"c":5,"v":true},{"l":950,"t":180,"s":90,"c":4,"v":false},{"l":1040,"t":270,"s":80,"c":5,"v":true},{"l":950,"t":380,"s":80,"c":4,"v":true},{"l":950,"t":500,"s":80,"c":4,"v":true},{"l":950,"t":610,"s":80,"c":4,"v":true},{"l":1040,"t":540,"s":80,"c":5,"v":true},{"l":1040,"t":450,"s":80,"c":5,"v":true},{"l":1040,"t":630,"s":80,"c":5,"v":true}],"g":[{"l":1225,"t":150}],"b":[{"l":635,"t":15},{"l":905,"t":310},{"l":905,"t":520},{"l":1090,"t":270},{"l":1135,"t":230},{"l":1180,"t":190}],"c":[{"l":635,"t":445}],"a":[{"l":5,"t":5}]}',
+				'{"o":[{"l":0,"t":510,"s":80,"c":0,"v":false},{"l":60,"t":470,"s":80,"c":0,"v":false},{"l":120,"t":430,"s":80,"c":0,"v":false},{"l":180,"t":390,"s":80,"c":0,"v":false},{"l":240,"t":350,"s":80,"c":0,"v":false},{"l":300,"t":310,"s":80,"c":0,"v":false},{"l":360,"t":270,"s":80,"c":0,"v":false},{"l":420,"t":230,"s":80,"c":0,"v":false},{"l":360,"t":190,"s":80,"c":0,"v":false},{"l":300,"t":150,"s":80,"c":0,"v":false},{"l":240,"t":110,"s":80,"c":0,"v":false},{"l":520,"t":0,"s":80,"c":1,"v":false},{"l":580,"t":40,"s":80,"c":1,"v":false},{"l":640,"t":80,"s":80,"c":1,"v":false},{"l":700,"t":120,"s":80,"c":1,"v":false},{"l":760,"t":160,"s":80,"c":1,"v":false},{"l":820,"t":200,"s":80,"c":1,"v":false},{"l":880,"t":240,"s":80,"c":1,"v":false},{"l":180,"t":230,"s":80,"c":2,"v":false},{"l":120,"t":270,"s":80,"c":2,"v":false},{"l":60,"t":310,"s":80,"c":2,"v":false},{"l":0,"t":350,"s":80,"c":2,"v":false},{"l":820,"t":280,"s":80,"c":1,"v":false},{"l":760,"t":320,"s":80,"c":1,"v":false},{"l":700,"t":360,"s":80,"c":1,"v":false},{"l":640,"t":400,"s":80,"c":1,"v":false},{"l":580,"t":440,"s":80,"c":1,"v":false},{"l":520,"t":480,"s":80,"c":1,"v":false},{"l":460,"t":520,"s":80,"c":1,"v":false},{"l":400,"t":560,"s":80,"c":1,"v":false},{"l":340,"t":600,"s":800,"c":2,"v":false},{"l":960,"t":460,"s":320,"c":4,"v":false},{"l":840,"t":320,"s":300,"c":3,"v":false},{"l":1200,"t":140,"s":80,"c":5,"v":false},{"l":1140,"t":100,"s":80,"c":5,"v":false},{"l":1080,"t":60,"s":80,"c":5,"v":false}],"g":[{"l":1230,"t":90}],"b":[{"l":340,"t":230},{"l":20,"t":20},{"l":500,"t":80},{"l":565,"t":120},{"l":625,"t":160},{"l":685,"t":200},{"l":620,"t":340},{"l":560,"t":380},{"l":500,"t":420},{"l":440,"t":460},{"l":810,"t":680},{"l":990,"t":680},{"l":580,"t":540},{"l":640,"t":500},{"l":700,"t":460},{"l":760,"t":420},{"l":1225,"t":320},{"l":820,"t":100},{"l":880,"t":60},{"l":940,"t":20}],"c":[],"a":[{"l":10,"t":460}]}',
+				'{"o":[{"l":890,"t":390,"s":390,"c":0,"v":false},{"l":890,"t":430,"s":290,"c":0,"v":true},{"l":280,"t":0,"s":80,"c":5,"v":true},{"l":620,"t":640,"s":80,"c":5,"v":true},{"l":150,"t":0,"s":80,"c":5,"v":true},{"l":30,"t":0,"s":80,"c":5,"v":true}],"g":[{"l":1230,"t":340}],"b":[{"l":280,"t":80},{"l":280,"t":125},{"l":280,"t":170},{"l":280,"t":215},{"l":280,"t":260},{"l":280,"t":305},{"l":280,"t":350},{"l":280,"t":395},{"l":280,"t":440},{"l":280,"t":485},{"l":280,"t":530},{"l":620,"t":600},{"l":620,"t":555},{"l":620,"t":510},{"l":620,"t":465},{"l":620,"t":420},{"l":620,"t":375},{"l":620,"t":330},{"l":620,"t":285},{"l":280,"t":575},{"l":620,"t":240},{"l":620,"t":195},{"l":620,"t":150},{"l":620,"t":105}],"c":[{"l":780,"t":50},{"l":820,"t":90},{"l":860,"t":130},{"l":900,"t":170},{"l":940,"t":210}],"a":[{"l":90,"t":10}]}',
+				'{"o":[{"l":500,"t":80,"s":150,"c":0,"v":true},{"l":740,"t":80,"s":80,"c":0,"v":true},{"l":580,"t":330,"s":80,"c":0,"v":true},{"l":430,"t":340,"s":80,"c":0,"v":false},{"l":620,"t":0,"s":80,"c":0,"v":true},{"l":280,"t":340,"s":80,"c":0,"v":false},{"l":280,"t":80,"s":80,"c":0,"v":false},{"l":360,"t":640,"s":80,"c":0,"v":true},{"l":660,"t":640,"s":80,"c":0,"v":true},{"l":580,"t":290,"s":80,"c":0,"v":false},{"l":740,"t":200,"s":120,"c":0,"v":true},{"l":880,"t":120,"s":120,"c":0,"v":true},{"l":920,"t":550,"s":80,"c":0,"v":false},{"l":920,"t":200,"s":80,"c":0,"v":false},{"l":1000,"t":0,"s":720,"c":5,"v":true},{"l":240,"t":0,"s":720,"c":5,"v":true},{"l":540,"t":160,"s":340,"c":0,"v":false},{"l":430,"t":230,"s":110,"c":0,"v":false},{"l":550,"t":540,"s":80,"c":0,"v":true},{"l":810,"t":490,"s":80,"c":0,"v":true},{"l":680,"t":400,"s":100,"c":0,"v":true},{"l":410,"t":500,"s":340,"c":0,"v":false},{"l":920,"t":300,"s":80,"c":0,"v":false}],"g":[{"l":950,"t":250}],"b":[{"l":620,"t":245},{"l":525,"t":340},{"l":375,"t":340},{"l":385,"t":210},{"l":830,"t":5},{"l":575,"t":5},{"l":785,"t":205},{"l":300,"t":20},{"l":695,"t":115},{"l":720,"t":345},{"l":300,"t":660},{"l":550,"t":625},{"l":760,"t":500},{"l":365,"t":500},{"l":595,"t":545},{"l":705,"t":640},{"l":940,"t":660},{"l":830,"t":445}],"c":[],"a":[{"l":940,"t":140}]}',
+			],
+
+			prepareThumbnail: function (canvas, ctx, level, w, h, factor) {
+				var i, obj, objs, s;
+
+				function f(x) {
+					return Math.ceil(x / factor);
+				}
+
+				ctx.globalCompositeOperation = "source-over";
+				ctx.fillStyle = "#000";
+				ctx.fillRect(0, 0, w, h);
+				ctx.globalCompositeOperation = "lighter";
+
+				s = f(WallPrototype.thickness);
+				objs = level.o;
+				for (i = objs.length - 1; i >= 0; i--) {
+					obj = objs[i];
+					ctx.fillStyle = WallPrototype.colors[obj.c];
+					if (obj.v)
+						ctx.fillRect(f(obj.l), f(obj.t), s, f(obj.s));
+					else
+						ctx.fillRect(f(obj.l), f(obj.t), f(obj.s), s);
+				}
+
+				s = f(GoalPrototype.size + 1);
+				objs = level.g;
+				ctx.fillStyle = "#06f";
+				for (i = objs.length - 1; i >= 0; i--) {
+					obj = objs[i];
+					ctx.fillRect(f(obj.l), f(obj.t), s, s);
+				}
+
+				s = f(BombPrototype.size + 1);
+				objs = level.b;
+				ctx.fillStyle = "#f00";
+				for (i = objs.length - 1; i >= 0; i--) {
+					obj = objs[i];
+					ctx.fillRect(f(obj.l), f(obj.t), s, s);
+				}
+
+				s = f(CucumberPrototype.size + 1);
+				objs = level.c;
+				ctx.fillStyle = "#0f0";
+				for (i = objs.length - 1; i >= 0; i--) {
+					obj = objs[i];
+					ctx.fillRect(f(obj.l), f(obj.t), s, s);
+				}
+
+				s = f(BallPrototype.size + 1);
+				objs = level.a;
+				ctx.fillStyle = "#fff";
+				for (i = objs.length - 1; i >= 0; i--) {
+					obj = objs[i];
+					ctx.fillRect(f(obj.l), f(obj.t), s, s);
+				}
+
+				return canvas.toDataURL("image/png");
+			},
+
+			prepareThumbnails: function () {
+				var canvas = document.createElement("canvas"), ctx, i, factor = 10,
+					w = Math.ceil(game.width / factor), h = Math.ceil(game.height / factor),
+					levels = this.levels, thumbnails = new Array(levels.length);
+
+				canvas.setAttribute("width", w);
+				canvas.setAttribute("height", h);
+				ctx = canvas.getContext("2d", { alpha: false });
+
+				for (i = 0; i < levels.length; i++)
+					thumbnails[i] = this.prepareThumbnail(canvas, ctx, JSON.parse(levels[i]), w, h, factor);
+
+				return thumbnails;
+			},
+
+			prepare: function (scene) {
+				var i, c, button, levels = this.levels,
+					blinking = false, blinkCount = 0, blinkInterval = 0,
+					parent = divLevelSelection.firstChild, thumbnails = this.prepareThumbnails();
+
+				function loadLevel() {
+					if (scene.fade || blinking)
+						return;
+					var button = this;
+					blinking = true;
+					blinkCount = 0;
+					blinkInterval = setInterval(function () {
+						blinkCount++;
+						button.style.visibility = ((blinkCount & 1) ? "hidden" : "");
+						if (blinkCount >= 8) {
+							clearInterval(blinkInterval);
+							blinking = false;
+							blinkInterval = 0;
+						}
+					}, 62); // 500 ms / 8 = 62.5 ms
+					scene.loadLevel(parseInt(this.getAttribute("data-id")));
+				}
+
+				for (i = 0; i < levels.length; i++) {
+					if (i && !(i % 3))
+						parent.appendChild(document.createElement("br"));
+
+					c = i % 6;
+					button = document.createElement("button");
+					button.className = "level level" + c;
+					button.setAttribute("type", "button");
+					button.setAttribute("data-id", i);
+					button.appendChild(document.createTextNode(i + 1));
+					button.onclick = loadLevel;
+					button.style.backgroundImage = "url(" + thumbnails[i] + ")";
+
+					parent.appendChild(button);
+				}
+			}
+		};
+
+		var GameScene = new Phaser.Class({
+			fade: null,
+			blinking: false,
+
+			touchId: null,
+			touch1: null,
+			touch2: null,
+
+			modeTitle: 0,
+			modeEditor: 1,
+			modeLevelSelection: 2,
+			modePlay: 3,
+			mode: 0,
+
+			editorGrid: null,
+			editorCursorV: null,
+			editorCursorH: null,
+
+			currentLevel: 0,
+			paused: false,
+			pauseBg: null,
+			score: 0,
+			cucumbersCollected: 0,
+			destroyedBalls: 0,
+			gameEnded: true,
+			processPauseDuringBlink: false,
+
+			resultIcon: null,
+			resultVictory: false,
+
+			buttons: [],
+			buttonSize: 96,
+			buttonsVisible: true,
+			buttonPlayPause: null,
+			buttonTouchMode: null,
+			buttonTrackpadMode: null,
+			buttonMenuX: 0,
+			buttonMenuY: 0,
+
+			numConfetti: 200,
+			confetti: null,
+
+			Extends: Phaser.Scene,
+
+			initialize: function () {
+				gameCanvas = document.getElementsByTagName("canvas")[0];
+
+				Phaser.Scene.call(this, { key: "GameScene" });
+			},
+
+			preload: function () {
+				this.load.atlas("atlas", "assets/atlas.png", "assets/atlas.json");
+			},
+
+			create: function () {
+				hideLoading();
+
+				// For compatibility with Phaser 2
+				game.width = game.scale.width;
+				game.height = game.scale.height;
+
+				this.prepareHistoryHandler();
+
+				this.matter.world.setBounds();
+
+				Level.prepare(this);
+				UIObject.prepare(this);
+				Tool.setTrackpadMode(loadSetting("trackpadMode", isNeon));
+
+				this.prepareTouch();
+				this.prepareMode(this.modeTitle);
+			},
+
+			update: function (time, delta) {
+				FlarePrototype.processAll(delta);
+
+				if (UIObject.shards)
+					UIObject.processShards(delta);
+
+				if (UIObject.editMode) {
+					var p = this.input.activePointer;
+
+					if (this.touchId !== null)
+						Tool.handlePointerMove(this, p.x | 0, p.y | 0);
+
+					if (this.editorCursorV) {
+						if (Tool.trackpadMode) {
+							this.editorCursorV.x = _10(Tool.trackpadX);
+							this.editorCursorH.y = _10(Tool.trackpadY);
+						} else {
+							this.editorCursorV.x = _10(p.x);
+							this.editorCursorH.y = _10(p.y);
+						}
+					}
+				} else {
+					this.processGravity();
+
+					if (this.confetti)
+						this.processConfetti(delta);
+
+					if (this.resultIcon && this.resultVictory)
+						this.processResultIcon(delta);
+				}
+			},
+
+			processGravity: function () {
+				var ax = 0, ay = 0;
+				if (UIObject.touchMode) {
+					if (this.touch1) {
+						var t = this.touch1, p = this.input.activePointer,
+							x1 = t.x, y1 = t.y,
+							x2 = p.x, y2 = p.y,
+							dx = x2 - x1,
+							dy = y2 - y1,
+							d = Math.sqrt((dx * dx) + (dy * dy)), r,
+							maxAcc = BallPrototype.maxAcc * 0.005; // 1 / 200 = 0.005
+						if (d > 0.5) {
+							if (d > 200) {
+								// Faster than using atan, sin and cos ;)
+								r = 200 / d;
+								dx *= r;
+								dy *= r;
+								d = 200;
+								x2 = x1 + dx;
+								y2 = y1 + dy;
+							}
+							// ax = maxAcc * (d / 200) * (dx / d);
+							// ay = maxAcc * (d / 200) * (dy / d);
+							// Simplifying:
+							// ax = maxAcc / 200 * dx;
+							// ay = maxAcc / 200 * dy;
+							ax = maxAcc * dx;
+							ay = maxAcc * dy;
+						}
+
+						this.touch2.x = x2;
+						this.touch2.y = y2;
+					}
+				} else {
+					if (UIObject.accelerationModeNeon)
+						UIObject.processNeonAcceleration();
+					ax = UIObject.accelerationX;
+					ay = UIObject.accelerationY;
+					var d = Math.sqrt((ax * ax) + (ay * ay)), r,
+						maxAcc = BallPrototype.maxAcc * 0.3333; // 1 / 3 = 0.3333
+					if (d > 3) {
+						// Faster than using atan, sin and cos ;)
+						r = 3 / d;
+						ax *= r;
+						ay *= r;
+						d = 3;
+					}
+					// ax = maxAcc * (d / 3) * (ax / d);
+					// ay = maxAcc * (d / 3) * (ay / d);
+					// Simplifying:
+					// ax = maxAcc / 3 * ax;
+					// ay = maxAcc / 3 * ay;
+					ax *= maxAcc;
+					ay *= maxAcc;
+				}
+				this.matter.world.setGravity(ax, ay, 0.0005);
+
+				var i, balls = UIObject.balls,
+					maxVel = BallPrototype.maxVel;
+				for (i = balls.length - 1; i >= 0; i--) {
+					var ball = balls[i].image, body;
+					// Balls that blow up lose their body
+					if (!(body = ball.body))
+						continue;
+					var v = body.velocity,
+						vx = v.x,
+						vy = v.y;
+					if (vx > maxVel)
+						vx = maxVel;
+					else if (vx < -maxVel)
+						vx = -maxVel;
+					if (vy > maxVel)
+						vy = maxVel;
+					else if (vy < -maxVel)
+						vy = -maxVel;
+					ball.setVelocity(vx, vy);
+				}
+			},
+
+			pushHistoryState: function () {
+				window.history.pushState(null, "Neon Labyrinth Maker");
+			},
+
+			prepareHistoryHandler: function () {
+				// https://developer.mozilla.org/en-US/docs/Web/API/History_API
+				// https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onpopstate
+				// https://developer.mozilla.org/en-US/docs/Web/API/Window/popstate_event
+				var _this = this;
+				window.onpopstate = function () {
+					// Simulate Android's onBackPressed()
+					if (_this.mode !== _this.modeTitle) {
+						if (!_this.fade && _this.touchId === null && !Tool.trackpadOngoing) {
+							switch (_this.mode) {
+								case _this.modeEditor:
+									if (!UIObject.editMode) {
+										_this.pushHistoryState();
+										_this.enterEditMode();
+									} else {
+										UIObject.saveDefaultObjects();
+										_this.gotoMode(_this.modeTitle);
+									}
+									break;
+								case _this.modeLevelSelection:
+									if (hideLevelSelect())
+										_this.gotoMode(_this.modeTitle);
+									else
+										_this.pushHistoryState();
+									break;
+								case _this.modePlay:
+									_this.pushHistoryState();
+									// Use this.blinking as a protection against spurious clicks
+									if (!_this.blinking || _this.processPauseDuringBlink) {
+										_this.processPauseDuringBlink = false;
+										if (_this.paused) {
+											if (_this.gameEnded)
+												_this.leavePauseAndResetLevel();
+											else
+												_this.leavePause();
+										} else {
+											_this.enterPause();
+										}
+									}
+									break;
+							}
+						} else {
+							_this.pushHistoryState();
+						}
+					} else if (divVisible) {
+						if (!hideHelp())
+							_this.pushHistoryState();
+					}
+				};
+			},
+
+			prepareTouch: function () {
+				this.touchId = null;
+				this.touch1 = null;
+				this.touch2 = null;
+
+				this.input.on("pointerdown", function (pointer, interactiveObjects) {
+					if (this.fade || this.touchId !== null || this.mode === this.modeTitle || this.paused || (interactiveObjects && interactiveObjects.length && !Tool.trackpadOngoing))
+						return;
+
+					if (UIObject.editMode) {
+						this.touchId = pointer.id;
+						Tool.handlePointerDown(this, pointer.x | 0, pointer.y | 0);
+						return;
+					}
+
+					if (!UIObject.touchMode)
+						return;
+
+					this.touchId = pointer.id;
+					this.touch1 = this.add.image(pointer.x, pointer.y, "atlas", "touch")
+						.setOrigin(0.5)
+						.setBlendMode(Phaser.BlendModes.ADD)
+						.setAlpha(0.4);
+					this.touch2 = this.add.image(pointer.x, pointer.y, "atlas", "touch")
+						.setOrigin(0.5)
+						.setBlendMode(Phaser.BlendModes.ADD);
+				}, this);
+
+				this.input.on("pointerup", function (pointer) {
+					if (this.touchId !== pointer.id)
+						return;
+
+					if (UIObject.editMode && !this.touch2) {
+						this.touchId = null;
+						Tool.handlePointerUp(this, pointer.x | 0, pointer.y | 0);
+						return;
+					}
+
+					var touch1 = this.touch1, touch2 = this.touch2;
+					this.touchId = null;
+					this.touch1 = null;
+					this.touch2 = null;
+					tweenAlpha(this, 0, [touch1, touch2], function () {
+						touch1.destroy();
+						touch2.destroy();
+						touch1 = null;
+						touch2 = null;
+					}, 200);
+				}, this);
+			},
+
+			stopBlinking: function () {
+				this.blinking = false;
+			},
+
+			createButton: function (x, y, image, callback) {
+				var button = this.add.image(x, y, "atlas", image)
+					.setBlendMode(Phaser.BlendModes.ADD);
+				button.isUIButton = true;
+				button.x0 = x;
+				button.y0 = y;
+				button.setOrigin(0.5);
+				button.setInteractive({ useHandCursor: true }).on("pointerup", function () {
+					if (this.fade || this.blinking || this.touchId !== null || (divVisible && this.mode === this.modeTitle) || Tool.trackpadOngoing)
+						return;
+
+					var blinkObj = (callback.apply(this) || button);
+					this.blinking = true;
+					tweenBlink(this, [blinkObj], this.stopBlinking);
+				}, this);
+
+				this.buttons.push(button);
+
+				return button;
+			},
+
+			pencilCallback: function (c) {
+				return function () {
+					this.enterEditMode();
+					Tool.currentAction = Tool.actionDrawWall;
+					Tool.currentColor = c;
+				};
+			},
+
+			enterEditMode: function () {
+				if (UIObject.editMode)
+					return;
+				this.enablePhysics(false);
+				this.gameEnded = true;
+				this.buttonPlayPause.setTexture("atlas", "play");
+				this.editorGrid.visible = true;
+				this.editorCursorV.visible = true;
+				this.editorCursorH.visible = true;
+				UIObject.editMode = true;
+				UIObject.resetScene(this);
+				if (!this.buttonsVisible)
+					this.toggleButtons();
+			},
+
+			leaveEditMode: function () {
+				if (!UIObject.editMode)
+					return;
+				this.score = 0;
+				this.cucumbersCollected = 0;
+				this.destroyedBalls = 0;
+				this.gameEnded = false;
+				this.buttonPlayPause.setTexture("atlas", "pause");
+				this.editorGrid.visible = false;
+				this.editorCursorV.visible = false;
+				this.editorCursorH.visible = false;
+				UIObject.goalsAvailable = (this.cucumbersCollected >= UIObject.cucumbers.length);
+				UIObject.saveDefaultObjects();
+				UIObject.editMode = false;
+				UIObject.resetScene(this);
+				if (this.buttonsVisible)
+					this.toggleButtons();
+				this.enablePhysics(true);
+			},
+
+			enterPause: function () {
+				if (this.paused)
+					return;
+				this.paused = true;
+				this.enablePhysics(false);
+
+				// Use this.blinking as a protection against spurious clicks
+				this.blinking = true;
+
+				this.pauseBg = createFade(this, 0, 0.75);
+
+				var buttonSize = this.buttonSize,
+					buttonSizeHalf = buttonSize >> 1,
+					buttonSize2 = buttonSize << 1,
+					buttonMenuX = game.width >> 1,
+					buttonMenuY = game.height >> 1,
+					i, x, y, targets = [];
+
+				if (this.gameEnded) {
+					if (this.score > (this.destroyedBalls >> 1)) {
+						this.resultVictory = true;
+						targets.push(this.resultIcon =
+							this.add.image(x = (buttonMenuX - buttonSizeHalf), y = (buttonMenuY >> 1), "atlas", "happy")
+								.setOrigin(0.5)
+								.setBlendMode(Phaser.BlendModes.ADD)
+						);
+						this.resultIcon.dt = 0;
+						this.resultIcon.dx = buttonSize;
+						this.resultIcon.dy = buttonSize;
+						this.resultIcon.x0 = x;
+						this.resultIcon.y0 = y;
+
+						this.popConfetti();
+					} else {
+						this.resultVictory = false;
+						targets.push(this.resultIcon =
+							this.add.image(buttonMenuX, buttonMenuY >> 1, "atlas", "sad")
+								.setOrigin(0.5)
+								.setBlendMode(Phaser.BlendModes.ADD)
+						);
+					}
+				}
+
+				if (!isPWA)
+					targets.push(this.createButton(game.width - buttonSizeHalf, buttonSizeHalf, "full_screen", this.toggleFullscreen));
+
+				if (!this.gameEnded && UIObject.accelerationModeSupported)
+					targets.push(this.buttonTouchMode = this.createButton(game.width >> 1, buttonMenuY + buttonSize2, UIObject.touchMode ? "hand" : (UIObject.invertXY ? "device2" : "device"), this.toggleTouchMode));
+
+				targets.push(this.createButton(buttonMenuX, buttonMenuY, "levels", this.leavePauseToLevelSelection));
+
+				for (i = 0; i < targets.length; i++)
+					targets[i].setAlpha(0);
+
+				tweenAlpha(this, 1, targets, function () {
+					// Use this.blinking as a protection against spurious clicks
+					this.blinking = false;
+				});
+
+				this.buttons[0].setTexture("atlas", "play");
+				this.children.bringToTop(this.buttons[0]);
+			},
+
+			popConfetti: function () {
+				var i, c, x, v, a,
+					numConfetti = this.numConfetti,
+					confetti = this.confetti;
+
+				if (confetti) {
+					for (i = numConfetti - 1; i >= 0; i--) {
+						if ((c = confetti[i])) {
+							c.destroy();
+							confetti[i] = null;
+						}
+					}
+				} else {
+					confetti = new Array(numConfetti);
+					this.confetti = confetti;
+				}
+
+				for (i = numConfetti - 1; i >= 0; i--) {
+					// Choose an angle between 30 deg and 90 deg
+					a = Phaser.Math.FloatBetween(Math.PI / 6, Math.PI * 0.5);
+					v = Phaser.Math.FloatBetween(300, 900);
+					if (i < (numConfetti >> 1)) {
+						x = 0;
+					} else {
+						x = game.width;
+						v = -v;
+					}
+					c = this.add.image(x, game.height + 10, "atlas", "confetti" + Phaser.Math.Between(0, 4))
+						.setOrigin(0.5)
+						.setBlendMode(Phaser.BlendModes.ADD)
+						.setScale(Phaser.Math.FloatBetween(3, 5), 2)
+						.setRotation(Phaser.Math.FloatBetween(0, 5));
+					c.av = Phaser.Math.FloatBetween(3, 15);
+					c.vx = Math.cos(a) * v;
+					c.vy = -Math.abs(Math.sin(a) * v);
+					confetti[i] = c;
+				}
+			},
+
+			processConfetti: function (delta) {
+				var i, c, h = game.height + 20, empty = true,
+					confetti = this.confetti, dt = delta * 0.001;
+
+				for (i = confetti.length - 1; i >= 0; i--) {
+					if (!(c = confetti[i]))
+						continue;
+
+					c.rotation += c.av * dt;
+					c.x += c.vx * dt;
+					c.y += c.vy * dt;
+					c.vy += 550 * dt;
+
+					if (c.y >= h) {
+						c.destroy();
+						confetti[i] = null;
+					} else {
+						empty = false;
+					}
+				}
+
+				if (empty)
+					this.confetti = null;
+			},
+
+			processResultIcon: function (delta) {
+				var resultIcon = this.resultIcon, dt = resultIcon.dt + (0.002 * delta);
+
+				while (dt >= 2)
+					dt -= 2;
+
+				resultIcon.dt = dt;
+				resultIcon.x = resultIcon.x0 + ((dt > 1 ? (2 - dt) : dt) * resultIcon.dx);
+				resultIcon.y = resultIcon.y0 - Math.abs(Math.sin(Math.PI * dt) * resultIcon.dy);
+			},
+
+			leavePause: function () {
+				if (!this.paused)
+					return;
+				this.paused = false;
+				this.enablePhysics(true);
+
+				// Use this.blinking as a protection against spurious clicks
+				this.blinking = true;
+
+				var targets = this.buttons.slice(1);
+				targets.push(this.pauseBg);
+
+				tweenAlpha(this, 0, targets, function () {
+					// Use this.blinking as a protection against spurious clicks
+					this.blinking = false;
+					this.pauseBg = null;
+					this.buttonTouchMode = null;
+
+					// Destroy all targets and remove all buttons except
+					// the first one, which is the pause button
+					for (var i = 0; i < targets.length; i++) {
+						targets[i].destroy();
+						targets[i] = null;
+					}
+					this.buttons.splice(1, this.buttons.length - 1);
+				});
+
+				this.buttons[0].setTexture("atlas", "pause");
+				this.children.bringToTop(this.buttons[0]);
+			},
+
+			leavePauseAndResetLevel: function () {
+				if (!this.paused)
+					return;
+
+				// Use this.blinking as a protection against spurious clicks
+				this.blinking = true;
+
+				this.fade = createFade(this, 0, 1, function () {
+					// Use this.blinking as a protection against spurious clicks
+					this.blinking = false;
+
+					this.pauseBg.destroy();
+					this.pauseBg = null;
+
+					this.fade.destroy();
+					this.fade = null;
+
+					this.prepareMode(this.modePlay);
+				});
+			},
+
+			leavePauseToLevelSelection: function () {
+				if (!this.paused)
+					return;
+				// Use this.blinking as a protection against spurious clicks
+				this.blinking = true;
+
+				this.fade = createFade(this, 0, 1, function () {
+					// Use this.blinking as a protection against spurious clicks
+					this.blinking = false;
+
+					this.pauseBg.destroy();
+					this.pauseBg = null;
+
+					this.fade.destroy();
+					this.fade = null;
+
+					this.prepareMode(this.modeLevelSelection);
+				});
+			},
+
+			toggleButtons: function () {
+				// There is no need to control this tween, because it has the
+				// same duration as the blink, which is already controlled
+				var i, button, buttons = this.buttons;
+				if (this.buttonsVisible) {
+					this.buttonsVisible = false;
+					buttons = buttons.slice(1);
+					this.tweens.add({
+						targets: buttons,
+						alpha: 0,
+						x: this.buttonMenuX,
+						y: this.buttonMenuY,
+						ease: "Sine.easeInOut",
+						duration: 500,
+						onComplete: function () {
+							for (var i = buttons.length - 1; i >= 0; i--)
+								buttons[i].setVisible(false);
+						},
+						onCompleteScope: this
+					});
+				} else {
+					this.buttonsVisible = true;
+					for (i = buttons.length - 1; i >= 1; i--) {
+						button = buttons[i];
+						button.setAlpha(0);
+						button.setVisible(true);
+						this.tweens.add({
+							targets: [button],
+							alpha: 1,
+							x: button.x0,
+							y: button.y0,
+							ease: "Sine.easeInOut",
+							duration: 500
+						});
+					}
+				}
+			},
+
+			toggleEditMode: function () {
+				if (UIObject.editMode)
+					this.leaveEditMode();
+				else
+					this.enterEditMode();
+			},
+
+			toggleTouchMode: function () {
+				if (UIObject.touchMode) {
+					UIObject.touchMode = false;
+					UIObject.invertXY = false;
+					this.buttonTouchMode.setTexture("atlas", "device");
+				} else if (!UIObject.invertXY) {
+					UIObject.invertXY = true;
+					this.buttonTouchMode.setTexture("atlas", "device2");
+				} else {
+					UIObject.touchMode = true;
+					UIObject.invertXY = false;
+					this.buttonTouchMode.setTexture("atlas", "hand");
+				}
+				saveSetting("touchMode", UIObject.touchMode);
+				saveSetting("invertXY", UIObject.invertXY);
+			},
+
+			toggleTrackpadMode: function () {
+				Tool.setTrackpadMode(!Tool.trackpadMode);
+				this.buttonTrackpadMode.setTexture("atlas", Tool.trackpadMode ? "trackpad" : "mouse");
+				saveSetting("trackpadMode", Tool.trackpadMode);
+			},
+
+			toggleFullscreen: function () {
+				if (!this.scale.fullscreen.available)
+					return;
+				try {
+					this.scale.fullscreenTarget = document.documentElement;
+					this.scale.toggleFullscreen();
+				} catch (ex) {
+					// Just ignore...
+				}
+				if (divVisible)
+					adjustDivWithTimeout();
+			},
+
+			share: function () {
+				this.enterEditMode();
+
+				var l, d = UIObject.serialize(true, true),
+					r = prompt(translate("ShareHelp"), d);
+
+				if (r === null || r === d)
+					return;
+
+				if (!r) {
+					UIObject.clear();
+					UIObject.dirty = true;
+					return;
+				}
+
+				if (!isNaN(l = parseInt(r)) && l == r) {
+					if (l >= 1 && l <= Level.levels.length) {
+						UIObject.deserialize(this, Level.levels[l - 1]);
+						UIObject.dirty = true;
+					}
+					return;
+				}
+
+				UIObject.deserialize(this, r);
+				UIObject.dirty = true;
+			},
+
+			loadLevel: function (level) {
+				if (this.fade || this.blinking || this.touchId !== null || this.mode !== this.modeLevelSelection || !hideLevelSelect())
+					return;
+
+				this.currentLevel = level;
+				this.gotoMode(this.modePlay);
+			},
+
+			gotoMode: function (mode) {
+				this.fade = createFade(this, 0, 1, function () {
+					this.fade.destroy();
+					this.fade = null;
+
+					this.prepareMode(mode);
+				});
+			},
+
+			prepareButtonsTitle: function () {
+				var buttonSize = this.buttonSize,
+					buttonSizeHalf = buttonSize >> 1,
+					buttonMenuX = game.width >> 1,
+					buttonMenuY = game.height - (buttonSize << 1);
+
+				this.createButton(buttonMenuX - buttonSize, buttonMenuY, "play", function () {
+					this.pushHistoryState();
+					this.gotoMode(this.modeLevelSelection);
+				});
+
+				this.createButton(buttonMenuX + buttonSize, buttonMenuY, "pencil1", function () {
+					this.pushHistoryState();
+					this.gotoMode(this.modeEditor);
+				});
+
+				if (!isPWA)
+					this.createButton(game.width - buttonSizeHalf, buttonSizeHalf, "full_screen", this.toggleFullscreen);
+
+				this.createButton(game.width - buttonSizeHalf, game.height - buttonSizeHalf, "question", function () {
+					this.pushHistoryState();
+					showHelp();
+				});
+			},
+
+			prepareButtonsEditor: function () {
+				var c, buttonSize = this.buttonSize,
+					buttonMenuX = buttonSize >> 1,
+					buttonMenuY = game.height - buttonMenuX;
+
+				this.buttonsVisible = true;
+				this.buttonMenuX = buttonMenuX;
+				this.buttonMenuY = buttonMenuY;
+
+				// buttons[0] must be the menu button
+				this.createButton(buttonMenuX, buttonMenuY, "menu", this.toggleButtons);
+
+				buttonMenuY -= buttonSize;
+				this.buttonPlayPause = this.createButton(buttonMenuX, buttonMenuY, UIObject.editMode ? "play" : "pause", this.toggleEditMode);
+
+				if (UIObject.accelerationModeSupported) {
+					buttonMenuY -= buttonSize;
+					this.buttonTouchMode = this.createButton(buttonMenuX, buttonMenuY, UIObject.touchMode ? "hand" : (UIObject.invertXY ? "device2" : "device"), this.toggleTouchMode);
+				}
+
+				buttonMenuY -= buttonSize;
+				this.buttonTrackpadMode = this.createButton(buttonMenuX, buttonMenuY, Tool.trackpadMode ? "trackpad" : "mouse", this.toggleTrackpadMode);
+
+				buttonMenuY -= buttonSize;
+				this.createButton(buttonMenuX, buttonMenuY, "share", this.share);
+
+				if (!isPWA) {
+					buttonMenuY -= buttonSize;
+					this.createButton(buttonMenuX, buttonMenuY, "full_screen", this.toggleFullscreen);
+				}
+
+				buttonMenuY -= buttonSize;
+				this.createButton(buttonMenuX, buttonMenuY, "back", function () {
+					window.history.back();
+				});
+
+				buttonMenuY = this.buttonMenuY;
+
+				buttonMenuX += buttonSize;
+				this.createButton(buttonMenuX, buttonMenuY, "move", function () {
+					this.enterEditMode();
+					Tool.currentAction = Tool.actionMove;
+				});
+
+				for (c = 0; c < 6; c++) {
+					buttonMenuX += buttonSize;
+					this.createButton(buttonMenuX, buttonMenuY, "pencil" + c, this.pencilCallback(c));
+				}
+
+				buttonMenuX += buttonSize;
+				this.createButton(buttonMenuX, buttonMenuY, "ball", function () {
+					this.enterEditMode();
+					Tool.currentAction = Tool.actionDrawBall;
+				});
+
+				buttonMenuX += buttonSize;
+				this.createButton(buttonMenuX, buttonMenuY, "bomb", function () {
+					this.enterEditMode();
+					Tool.currentAction = Tool.actionDrawBomb;
+				});
+
+				buttonMenuX += buttonSize;
+				this.createButton(buttonMenuX, buttonMenuY, "cucumber", function () {
+					this.enterEditMode();
+					Tool.currentAction = Tool.actionDrawCucumber;
+				});
+
+				buttonMenuX += buttonSize;
+				this.createButton(buttonMenuX, buttonMenuY, "goal", function () {
+					this.enterEditMode();
+					Tool.currentAction = Tool.actionDrawGoal;
+				});
+
+				this.createButton(buttonMenuX + buttonSize, buttonMenuY, "remove", function () {
+					this.enterEditMode();
+					Tool.currentAction = Tool.actionRemove;
+				});
+			},
+
+			prepareButtonsLevelSelect: function () {
+				var buttonSize = this.buttonSize,
+					buttonSizeHalf = buttonSize >> 1;
+
+				if (!isPWA)
+					this.createButton(game.width - buttonSizeHalf, buttonSizeHalf, "full_screen", this.toggleFullscreen);
+
+				this.createButton(buttonSizeHalf, buttonSizeHalf, "back", function () {
+					window.history.back();
+				});
+			},
+
+			prepareButtonsPlay: function () {
+				var buttonSize = this.buttonSize,
+					buttonSizeHalf = buttonSize >> 1;
+
+				this.createButton(buttonSizeHalf, game.height - buttonSizeHalf, "pause", function () {
+					this.processPauseDuringBlink = true;
+					window.history.back();
+				});
+			},
+
+			prepareMode: function (mode) {
+				var i, c, buttons = this.buttons, confetti = this.confetti;
+
+				this.mode = mode;
+
+				if ((c = this.editorGrid)) {
+					c.destroy();
+					this.editorGrid = null;
+				}
+
+				if ((c = this.editorCursorV)) {
+					c.destroy();
+					this.editorCursorV = null;
+				}
+
+				if ((c = this.editorCursorH)) {
+					c.destroy();
+					this.editorCursorH = null;
+				}
+
+				if ((c = this.resultIcon)) {
+					c.destroy();
+					this.resultIcon = null;
+				}
+
+				for (i = buttons.length - 1; i >= 0; i--) {
+					buttons[i].destroy();
+					buttons[i] = null;
+				}
+
+				if (confetti) {
+					for (i = confetti.length - 1; i >= 0; i--) {
+						if ((c = confetti[i])) {
+							c.destroy();
+							confetti[i] = null;
+						}
+					}
+					this.confetti = null;
+				}
+
+				this.buttons = [];
+				this.buttonPlayPause = null;
+				this.buttonTouchMode = null;
+				this.buttonTrackpadMode = null;
+				this.blinking = false;
+
+				switch (mode) {
+					case this.modeTitle:
+						FlarePrototype.prepare(this);
+
+						this.paused = true;
+						this.enablePhysics(false);
+
+						UIObject.editMode = false;
+						UIObject.loadTitle(this);
+
+						this.prepareButtonsTitle();
+						break;
+
+					case this.modeEditor:
+						FlarePrototype.destroyAll();
+
+						this.paused = false;
+						this.enablePhysics(false);
+						this.editorGrid = this.add.tileSprite(0, 0, game.width, game.height, "atlas", "grid")
+							.setOrigin(0)
+							.setBlendMode(Phaser.BlendModes.ADD);
+						this.editorCursorV = this.add.image(0, 0, "atlas", "cursor_v")
+							.setOrigin(0)
+							.setBlendMode(Phaser.BlendModes.ADD)
+							.setDisplaySize(10, game.height);
+						this.editorCursorH = this.add.image(0, 0, "atlas", "cursor_h")
+							.setOrigin(0)
+							.setBlendMode(Phaser.BlendModes.ADD)
+							.setDisplaySize(game.width, 10);
+
+						Tool.currentAction = Tool.actionMove;
+
+						UIObject.editMode = true;
+						UIObject.loadDefaultEditor(this);
+
+						this.prepareButtonsEditor();
+						break;
+
+					case this.modeLevelSelection:
+						FlarePrototype.prepare(this);
+
+						this.paused = true;
+						this.enablePhysics(false);
+
+						UIObject.editMode = true;
+						UIObject.clear();
+
+						this.prepareButtonsLevelSelect();
+
+						showLevelSelect();
+						break;
+
+					case this.modePlay:
+						FlarePrototype.destroyAll();
+
+						this.paused = false;
+						this.score = 0;
+						this.cucumbersCollected = 0;
+						this.destroyedBalls = 0;
+						this.gameEnded = false;
+
+						UIObject.editMode = false;
+						UIObject.clear();
+
+						UIObject.deserialize(this, Level.levels[this.currentLevel]);
+
+						this.prepareButtonsPlay();
+						this.enablePhysics(false);
+						break;
+				}
+
+				this.fade = createFade(this, 1, 0, function () {
+					this.fade.destroy();
+
+					if (this.mode === this.modePlay) {
+						var i, balls = UIObject.balls, targets = new Array(balls.length);
+						for (i = balls.length - 1; i >= 0; i--)
+							targets[i] = balls[i].image;
+
+						tweenBlink(this, targets, function () {
+							this.fade = null;
+							this.enablePhysics(true);
+						}, 1000);
+					} else {
+						this.fade = null;
+					}
+				});
+			},
+
+			enablePhysics: function (enabled) {
+				if (enabled) {
+					this.matter.resume();
+					this.matter.world.on("collisionstart", this.collisionHandler, this);
+				} else {
+					this.matter.pause();
+					this.matter.world.off("collisionstart", this.collisionHandler, this);
+				}
+			},
+
+			collisionHandler: function (event) {
+				// The attribute was called "a" to make the lookup easier... Also, I am
+				// not using constants to make the tests even faster!
+				// 1 is ball
+				// 2 is bomb
+				// 4 is goal
+				// 8 is cucumber
+				var pairs = event.pairs, i = pairs.length - 1,
+					pair, bodyA, bodyB, aa, ba;
+				for (; i >= 0; i--) {
+					if ((aa = (bodyA = (pair = pairs[i]).bodyA).a) && (ba = (bodyB = pair.bodyB).a)) {
+						switch (aa + ba) {
+							case 3:
+								// Avoid handling fake explosions (in case two or more
+								// balls collide with the same bomb at the same time)
+								if (!(bodyA = bodyA.gameObject) ||
+									!(bodyB = bodyB.gameObject) ||
+									this.paused)
+									continue;
+								// ball-bomb collision
+								if (aa === 1)
+									UIObject.blowUpBall(this, bodyA, bodyB);
+								else
+									UIObject.blowUpBall(this, bodyB, bodyA);
+								this.destroyedBalls++;
+								if (this.destroyedBalls >= UIObject.balls.length) {
+									this.gameEnded = true;
+									// We must not call history.back() if the user is
+									// touching/clicking the screen, because a few
+									// browsers will ignore the request in such cases...
+									//window.history.back();
+									if (this.mode === this.modePlay)
+										this.enterPause();
+									else
+										this.enterEditMode();
+								}
+								break;
+							case 5:
+								if (!(bodyA = bodyA.gameObject) ||
+									!(bodyB = bodyB.gameObject) ||
+									this.paused)
+									continue;
+								// ball-goal collision
+								if (aa === 1)
+									UIObject.blowUpBallInGoal(this, bodyA, bodyB);
+								else
+									UIObject.blowUpBallInGoal(this, bodyB, bodyA);
+								this.score++;
+								this.destroyedBalls++;
+								if (this.destroyedBalls >= UIObject.balls.length) {
+									this.gameEnded = true;
+									// We must not call history.back() if the user is
+									// touching/clicking the screen, because a few
+									// browsers will ignore the request in such cases...
+									//window.history.back();
+									if (this.mode === this.modePlay)
+										this.enterPause();
+									else
+										this.enterEditMode();
+								}
+								break;
+							case 9:
+								if (!(bodyA = bodyA.gameObject) ||
+									!(bodyB = bodyB.gameObject) ||
+									this.paused)
+									continue;
+								// ball-cucumber collision
+								if (aa === 1)
+									UIObject.collectCucumber(this, bodyA, bodyB);
+								else
+									UIObject.collectCucumber(this, bodyB, bodyA);
+								this.cucumbersCollected++;
+								if (this.cucumbersCollected >= UIObject.cucumbers.length) {
+									UIObject.goalsAvailable = true;
+									UIObject.showAllGoalsBlinking(this);
+								}
+								break;
+						}
+					}
+				}
+			}
+		});
+
+		// References:
+		// https://github.com/photonstorm/phaser/blob/v3.18.0/src/core/typedefs/GameConfig.js
+		// https://github.com/photonstorm/phaser/blob/v3.18.0/src/core/typedefs/ScaleConfig.js
+		// https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.GameObjectFactory.html
+		// https://photonstorm.github.io/phaser3-docs/Phaser.Scene.html
+		// https://photonstorm.github.io/phaser3-docs/Phaser.Tweens.Tween.html
+		// https://photonstorm.github.io/phaser3-docs/Phaser.Types.Tweens.html#.TweenBuilderConfig
+		// https://photonstorm.github.io/phaser3-docs/Phaser.Animations.AnimationManager.html#create__anchor
+		// https://photonstorm.github.io/phaser3-docs/Phaser.Animations.Animation.html
+		// https://photonstorm.github.io/phaser3-docs/Phaser.Sound.BaseSoundManager.html#add__anchor
+		// https://photonstorm.github.io/phaser3-docs/Phaser.Types.Sound.html#.SoundConfig
+		// https://photonstorm.github.io/phaser3-docs/Phaser.Sound.BaseSound.html
+		// https://photonstorm.github.io/phaser3-docs/Phaser.Math.html#.FloatBetween
+		// https://photonstorm.github.io/phaser3-docs/Phaser.Loader.LoaderPlugin.html
+		// https://photonstorm.github.io/phaser3-docs/Phaser.Loader.Events.html
+		// https://photonstorm.github.io/phaser3-docs/MatterJS.html
+		// https://photonstorm.github.io/phaser3-docs/MatterJS.Bodies.html
+		// https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Matter.html
+		// https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Matter.Components.SetBody.html#setRectangle__anchor
+		// https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Matter.Image.html
+		// https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Matter.Factory.html#gameObject__anchor
+		// https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Matter.Factory.html#rectangle__anchor
+		// https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Matter.Factory.html#circle__anchor
+		// https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Matter.World.html
+		// https://rexrainbow.github.io/phaser3-rex-notes/docs/site/touchevents/
+		game = new Phaser.Game({
+			type: Phaser.AUTO,
+			scene: [GameScene],
+			physics: {
+				default: "matter",
+				matter: {
+					//enableSleeping: false,
+					debug: false
+				}
+			},
+			scale: {
+				width: 1280,
+				height: 720,
+				mode: Phaser.Scale.ScaleModes.FIT,
+				autoRound: true,
+				autoCenter: Phaser.Scale.Center.CENTER_BOTH
+			}
+		});
+
+		//]]>
+	</script>
+</body>
+</html>

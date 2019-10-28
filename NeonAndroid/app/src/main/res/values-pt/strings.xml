@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Labirinto Neon Maker</string>
+    <string name="app_name_short">Neon</string>
+    <string name="browser_language">pt</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancelar</string>
+    <string name="confirm_quit">Você deseja mesmo sair dessa página? Você perderá as informações que ainda não foram salvas.</string>
+</resources>

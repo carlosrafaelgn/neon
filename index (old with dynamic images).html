@@ -1,0 +1,1383 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-us">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, minimal-ui, shrink-to-fit=no" />
+
+	<meta property="og:locale" content="en_US" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://carlosrafaelgn.github.io/neon/" />
+	<meta property="og:title" content="Neon Labyrinth Maker" />
+	<meta property="og:site_name" content="Neon Labyrinth Maker" />
+	<meta property="og:description" content="Neon Labyrinth Maker" />
+	<meta property="og:image" content="https://carlosrafaelgn.github.io/neon/assets/screenshot.jpg" />
+	<meta property="og:image:type" content="image/jpeg">
+	<meta property="og:image:width" content="1280">
+	<meta property="og:image:height" content="720">
+
+	<meta name="author" content="Carlos Rafael Gimenes das Neves" />
+	<meta name="description" content="Neon Labyrinth Maker" />
+	<meta name="keywords" content="neon, labyrinth, maker, game, mobile game, desktop game" />
+
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="apple-mobile-web-app-title" content="Neon Labyrinth Maker" />
+	<link rel="apple-touch-icon" sizes="57x57" href="favicons/apple-icon-57x57.png" />
+	<link rel="apple-touch-icon" sizes="60x60" href="favicons/apple-icon-60x60.png" />
+	<link rel="apple-touch-icon" sizes="72x72" href="favicons/apple-icon-72x72.png" />
+	<link rel="apple-touch-icon" sizes="76x76" href="favicons/apple-icon-76x76.png" />
+	<link rel="apple-touch-icon" sizes="114x114" href="favicons/apple-icon-114x114.png" />
+	<link rel="apple-touch-icon" sizes="120x120" href="favicons/apple-icon-120x120.png" />
+	<link rel="apple-touch-icon" sizes="144x144" href="favicons/apple-icon-144x144.png" />
+	<link rel="apple-touch-icon" sizes="152x152" href="favicons/apple-icon-152x152.png" />
+	<link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-icon-180x180.png" />
+	<link rel="icon" type="image/png" sizes="512x512" href="favicons/favicon-512x512.png" />
+	<link rel="icon" type="image/png" sizes="192x192" href="favicons/favicon-192x192.png" />
+	<link rel="icon" type="image/png" sizes="96x96" href="favicons/favicon-96x96.png" />
+	<link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png" />
+	<link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png" />
+	<link rel="Shortcut Icon" href="favicon.ico" />
+	<link rel="Shortcut Icon" href="favicon.png" />
+	<link rel="manifest" href="manifest.json" />
+	<meta name="msapplication-config" content="browserconfig.xml" />
+	<meta name="theme-color" content="#222222" />
+
+	<title>Neon Labyrinth Maker</title>
+
+	<style type="text/css">
+		html {
+			height: 100%;
+			min-height: 100%;
+			max-height: 100%;
+		}
+
+		body, input, textarea, select {
+			font: normal 30px 'Segoe UI', 'Open Sans', Roboto, sans-serif;
+		}
+
+		body {
+			background: #000;
+			padding: 0;
+			margin: 0;
+			color: #fff;
+			height: 100%;
+			min-height: 100%;
+			max-height: 100%;
+			overflow: hidden;
+		}
+
+		#divLoading {
+			position: fixed;
+			z-index: 9999;
+			margin: 0;
+			padding: 0;
+			left: 0;
+			bottom: 50px;
+			width: 100%;
+			text-align: center;
+			opacity: 0;
+			text-shadow: 0 0 8px #fff;
+			-webkit-transition: opacity ease-in-out .2s;
+			-o-transition: opacity ease-in-out .2s;
+			transition: opacity ease-in-out .2s;
+			user-select: none;
+			-moz-user-select: none;
+			pointer-events: none;
+		}
+
+			#divLoading.opaque {
+				opacity: 1;
+			}
+
+		canvas {
+			margin: 0 auto;
+		}
+	</style>
+</head>
+<body>
+
+	<div id="divLoading" class="opaque">Loading...</div>
+
+	<script type="text/javascript" src="phaser-3.18.1.min.js"></script>
+	<script type="text/javascript">
+		//<![CDATA[
+		"use strict";
+
+		// **************************************************************************
+		//  I just did not want to let this version go so easily...
+		//  This is an old version, without the texture atlas, but with dynamic
+		//  image generation! I decided to keep it here just for future reference!
+		// **************************************************************************
+
+		var game = null, divLoading = document.getElementById("divLoading"), divLoadingTimeout = 0;
+
+		function showLoading() {
+			if (!divLoading) {
+				divLoading = document.createElement("div");
+				divLoading.setAttribute("id", "divLoading");
+				divLoading.appendChild(document.createTextNode("Loading..."));
+				document.body.appendChild(divLoading);
+				if (divLoadingTimeout)
+					clearTimeout(divLoadingTimeout);
+				divLoadingTimeout = setTimeout(function () {
+					divLoadingTimeout = 0;
+					divLoading.className = "opaque";
+				}, 10);
+			}
+		}
+
+		function hideLoading() {
+			if (divLoading) {
+				divLoading.className = "";
+				if (divLoadingTimeout)
+					clearTimeout(divLoadingTimeout);
+				divLoadingTimeout = setTimeout(function () {
+					divLoadingTimeout = 0;
+					document.body.removeChild(divLoading);
+					divLoading = null;
+				}, 210);
+			}
+		}
+
+		function toggleFullScreen(scene) {
+			if (!scene.scale.fullscreen.available)
+				return;
+			try {
+				scene.scale.fullscreenTarget = document.documentElement;
+				scene.scale.toggleFullscreen();
+			} catch (ex) {
+				// Just ignore...
+			}
+		}
+
+		function _10(x) {
+			return (((x / 10) | 0) * 10);
+		}
+
+		function easeBlink(x) {
+			return (x <= 0 ? 0 : (x >= 1 ? 1 : ((x * 8) & 1)));
+		}
+
+		function tweenBlink(scene, targets, onComplete, duration) {
+			for (var i = targets.length - 1; i >= 0; i--)
+				targets[i].setAlpha(0);
+			scene.tweens.add({
+				targets: targets,
+				alpha: 1,
+				ease: easeBlink,
+				duration: (duration || 500),
+				onComplete: onComplete,
+				onCompleteScope: scene
+			});
+		}
+
+		function tweenAlpha(scene, alpha, targets, onComplete, duration, delay, onStart) {
+			scene.tweens.add({
+				targets: targets,
+				alpha: alpha,
+				ease: "Sine.easeInOut",
+				duration: (duration || 500),
+				delay: delay,
+				onComplete: onComplete,
+				onCompleteScope: scene,
+				onStart: onStart,
+				onStartScope: (onStart ? scene : null)
+			});
+		}
+
+		function createFade(scene, startAlpha, endAlpha, onComplete) {
+			var fade = scene.add.image(0, 0, "black");
+			fade.setOrigin(0);
+			fade.setAlpha(startAlpha);
+			fade.displayWidth = game.width;
+			fade.displayHeight = game.height;
+			if (onComplete)
+				tweenAlpha(scene, endAlpha, fade, onComplete);
+			return fade;
+		}
+
+		function createTintedImages(fileNames, colors, callback) {
+			var i, res = new Array(fileNames.length),
+				canvas = document.createElement("canvas"),
+				ctx = canvas.getContext("2d", { alpha: false });
+
+			for (i = fileNames.length - 1; i >= 0; i--)
+				res[i] = new Array(colors.length);
+
+			function loadNextFileName(f) {
+				if (f >= fileNames.length) {
+					canvas = null;
+					ctx = null;
+					callback(res, null);
+					res = null;
+					return;
+				}
+
+				var img = new Image();
+				img.onerror = function () {
+					res = null;
+					canvas = null;
+					ctx = null;
+					callback(null, f);
+				};
+				img.onload = function () {
+					canvas.width = img.width;
+					canvas.height = img.height;
+					for (var c = colors.length - 1; c >= 0; c--) {
+						// Let's try to avoid using Phaser's setTint() in favor
+						// of a somewhat better performance in slower devices
+						ctx.clearRect(0, 0, img.width, img.height);
+						ctx.drawImage(img, 0, 0);
+						ctx.globalCompositeOperation = "multiply";
+						ctx.fillStyle = colors[c];
+						ctx.fillRect(0, 0, img.width, img.height);
+						ctx.globalCompositeOperation = "source-over";
+						res[f][c] = canvas.toDataURL("image/png");
+					}
+					img = null;
+					loadNextFileName(f + 1);
+				};
+				img.src = fileNames[f];
+			}
+
+			loadNextFileName(0);
+		}
+
+		var UIObject = {
+			typeBall: 0,
+			typeWall: 1,
+			typeGoal: 2,
+			typeHole: 3,
+
+			editMode: true,
+
+			// Treat the ball differently from other objects
+			ballMaxAcc: 2,
+			ballMaxVel: 8,
+			ballSize: 40,
+			ballRadius: 20,
+			ballX0: 0,
+			ballY0: 0,
+			ball: null,
+
+			objects: [],
+
+			prepareBall: function (scene) {
+				// http://www.html5gamedevs.com/topic/41091-matterjs-collision-breaks-at-high-speed/
+				// Uncomment only if necessary!
+				//this.matter.world.engine.positionIterations = 10;
+				//this.matter.world.engine.velocityIterations = 10;
+
+				this.ballX0 = 0;
+				this.ballY0 = 0;
+
+				this.resetBall(scene);
+			},
+
+			resetBall: function (scene) {
+				var ball = this.ball, ballRadius = this.ballRadius;
+
+				if (ball)
+					ball.destroy();
+
+				if (this.editMode) {
+					ball = scene.add.image(ballRadius, ballRadius, "ball")
+						.setOrigin(0.5)
+						.setBlendMode(Phaser.BlendModes.ADD);
+				} else {
+					ball = scene.matter.add.image(ballRadius, ballRadius, "ball")
+						.setOrigin(0.5)
+						.setBlendMode(Phaser.BlendModes.ADD)
+						.setCircle(ballRadius)
+						.setFriction(0.03, 0.03, 0)
+						.setIgnoreGravity(false)
+						.setMass(1)
+						.setBounce(1);
+					ball.setVelocity(0, 0);
+				}
+
+				ball.x = this.ballX0 + ballRadius;
+				ball.y = this.ballY0 + ballRadius;
+
+				this.ball = ball;
+
+				scene.matter.world.setGravity(0, 0, 0.0005);
+			},
+
+			getAt: function (x, y, includeBall) {
+				var i, obj, b, ballRadius, objects = this.objects;
+
+				if (includeBall) {
+					obj = this.ball;
+					if (x >= ((b = obj.x) - (ballRadius = this.ballRadius)) &&
+						x < (b + ballRadius) &&
+						y >= ((b = obj.y) - ballRadius) &&
+						y < (b + ballRadius))
+						return obj;
+				}
+
+				// Start searching from the last (topmost) object
+				for (i = objects.length - 1; i >= 0; i--) {
+					obj = objects[i];
+					if (x >= obj.left && x < obj.right &&
+						y >= obj.top && y < obj.bottom)
+						return obj;
+				}
+
+				return null;
+			},
+
+			add: function (obj) {
+				this.objects.push(obj);
+			},
+
+			remove: function (obj) {
+				var objects = this.objects, i = objects.indexOf(obj);
+				if (i >= 0) {
+					objects.splice(i, 1);
+					return true;
+				}
+				return false;
+			}
+		};
+
+		// I'm not using Flare.prototype = { ... } for performance reasons
+		var FlarePrototype = {
+			minVel: 100 / 1000, // px per ms
+			maxVel: 200 / 1000,
+
+			colors: [],
+			images: [],
+
+			addImagesToScene: function (scene) {
+				for (var c = FlarePrototype.images.length - 1; c >= 0; c--)
+					scene.textures.addBase64("flare" + c, FlarePrototype.images[c]);
+			},
+
+			loadImages: function (callback) {
+				var i, color, c, colors = FlarePrototype.colors,
+					steps = 4,
+					r = 51, g = 102, b = 255,
+					rd = (255 - r) / steps, gd = (51 - g) / steps, bd = (238 - b) / steps;
+
+				for (i = 0; i < steps; i++) {
+					color = "#";
+					if ((c = (r | 0).toString(16)).length < 2) c = "0" + c;
+					color += c;
+					if ((c = (g | 0).toString(16)).length < 2) c = "0" + c;
+					color += c;
+					if ((c = (b | 0).toString(16)).length < 2) c = "0" + c;
+					color += c;
+					r += rd;
+					g += gd;
+					b += bd;
+					colors.push(color);
+				}
+
+				r = 255; g = 51; b = 238;
+				rd = (255 - r) / steps; gd = (204 - g) / steps; bd = (0 - b) / steps;
+
+				for (i = 0; i < steps; i++) {
+					color = "#";
+					if ((c = (r | 0).toString(16)).length < 2) c = "0" + c;
+					color += c;
+					if ((c = (g | 0).toString(16)).length < 2) c = "0" + c;
+					color += c;
+					if ((c = (b | 0).toString(16)).length < 2) c = "0" + c;
+					color += c;
+					r += rd;
+					g += gd;
+					b += bd;
+					colors.push(color);
+				}
+				createTintedImages(["assets/flare.png"], colors, function (result, error) {
+					if (result)
+						FlarePrototype.images = result[0];
+					callback(error);
+				});
+			}
+		};
+
+		// I'm not using Flare.prototype = { ... } for performance reasons
+		var FlareFunctions = {
+			reset: function (forceBottom) {
+				var flare = this.flare,
+					x = Phaser.Math.FloatBetween(0, 1),
+					y = (forceBottom ? game.height + 50 : Phaser.Math.FloatBetween(-50, game.height + 50));
+				flare.setScale(Phaser.Math.FloatBetween(0.5, 1.5))
+					.setAlpha(Phaser.Math.FloatBetween(0.25, 0.75))
+					.setTexture("flare" + ((x * FlarePrototype.colors.length) | 0));
+				x *= game.width;
+				flare.x = x;
+				flare.y = y;
+				this.a = Phaser.Math.FloatBetween(10, 60);
+				this.av = Phaser.Math.FloatBetween(0.001, 0.0025); // rads per ms
+				this.x0 = x;
+				this.y0 = y;
+				this.v = Phaser.Math.FloatBetween(FlarePrototype.minVel, FlarePrototype.maxVel);
+				this.dt = 0;
+			},
+
+			process: function (delta) {
+				var dt = this.dt + delta,
+					y = this.y0 - (this.v * dt);
+				if (y < -50) {
+					this.reset(true);
+				} else {
+					var flare = this.flare;
+					flare.x = this.x0 + (this.a * Math.sin(dt * this.av));
+					flare.y = y;
+					this.dt = dt;
+				}
+			},
+
+			destroy: function () {
+				if (this.flare) {
+					this.flare.destroy();
+					this.flare = null;
+				}
+			}
+		};
+
+		// I'm not using Flare.prototype = { ... } for performance reasons
+		function Flare(scene) {
+			this.flare = scene.add.image(0, 0, "flare0")
+				.setOrigin(0.5)
+				.setBlendMode(Phaser.BlendModes.ADD);
+
+			// I'm copying the functions here, instead of using
+			// Flare.prototype = { ... }, for performance reasons
+			for (var n in FlareFunctions)
+				this[n] = FlareFunctions[n];
+
+			this.reset(false);
+		}
+
+		// I'm not using Wall.prototype = { ... } for performance reasons
+		var WallPrototype = {
+			imageLargeDimension: 120,
+			thickness: 40,
+			minSize: 40 * 2,
+
+			colors: ["#06f", "#0c0", "#f80", "#c00", "#c0c", "#ccc"],
+			cap_l_glow: [],
+			cap_t_glow: [],
+			cap_l: [],
+			cap_t: [],
+			h: [],
+			v: [],
+
+			addImagesToScene: function (scene) {
+				for (var c = WallPrototype.colors.length - 1; c >= 0; c--) {
+					scene.textures.addBase64("wall" + c + "_cap_l_glow", WallPrototype.cap_l_glow[c]);
+					scene.textures.addBase64("wall" + c + "_cap_t_glow", WallPrototype.cap_t_glow[c]);
+					scene.textures.addBase64("wall" + c + "_cap_l", WallPrototype.cap_l[c]);
+					scene.textures.addBase64("wall" + c + "_cap_t", WallPrototype.cap_t[c]);
+					scene.textures.addBase64("wall" + c + "_h", WallPrototype.h[c]);
+					scene.textures.addBase64("wall" + c + "_v", WallPrototype.v[c]);
+				}
+			},
+
+			loadImages: function (callback) {
+				createTintedImages([
+					"assets/wall_cap_l_glow.png",
+					"assets/wall_cap_t_glow.png",
+					"assets/wall_cap_l.png",
+					"assets/wall_cap_t.png",
+					"assets/wall_h.png",
+					"assets/wall_v.png"
+				], WallPrototype.colors, function (result, error) {
+					if (result) {
+						WallPrototype.cap_l_glow = result[0];
+						WallPrototype.cap_t_glow = result[1];
+						WallPrototype.cap_l = result[2];
+						WallPrototype.cap_t = result[3];
+						WallPrototype.h = result[4];
+						WallPrototype.v = result[5];
+					}
+					callback(error);
+				});
+			}
+		};
+
+		// I'm not using Wall.prototype = { ... } for performance reasons
+		var WallFunctions = {
+			adjust: function (scene, x0, y0, x1, y1) {
+				// Make sure x0, y0, x1 and y1 are even numbers
+				x0 &= ~1;
+				y0 &= ~1;
+				x1 &= ~1;
+				y1 &= ~1;
+
+				var left, top, width, height, vertical, images, body,
+					thickness = WallPrototype.thickness,
+					minSize = WallPrototype.minSize;
+
+				if (Math.abs(width = (x1 - x0)) < Math.abs(height = (y1 - y0))) {
+					// Vertical
+					vertical = true;
+					left = x0;
+					width = thickness;
+					if (height >= 0) {
+						if (height < minSize)
+							height = minSize;
+						top = y0;
+					} else {
+						height = -height;
+						if (height < minSize)
+							height = minSize;
+						top = y0 - height;
+					}
+				} else {
+					// Horizontal
+					vertical = false;
+					top = y0;
+					height = thickness;
+					if (width >= 0) {
+						if (width < minSize)
+							width = minSize;
+						left = x0;
+					} else {
+						width = -width;
+						if (width < minSize)
+							width = minSize;
+						left = x0 - width;
+					}
+				}
+
+				if (vertical !== this.vertical) {
+					this.recreate(scene, left, top, (vertical ? height : width), this.color, vertical);
+				} else {
+					left -= this.left;
+					top -= this.top;
+					if (left || top)
+						this.move(left, top);
+					if (vertical) {
+						height -= this.height;
+						if (height) {
+							(images = this.images)[3].y += height;
+							images[4].y += height;
+							height += this.height;
+							this.height = height;
+							this.bottom = this.top + height;
+							if (height <= minSize) {
+								images[2].setVisible(false);
+							} else {
+								(body = images[2]).setVisible(true);
+								body.y = this.top + (height >> 1);
+								body.setDisplaySize(WallPrototype.imageLargeDimension, height -= (thickness << 1));
+								body.setRectangle(thickness, height, { isStatic: true });
+							}
+						}
+					} else {
+						width -= this.width;
+						if (width) {
+							(images = this.images)[3].x += width;
+							images[4].x += width;
+							width += this.width;
+							this.width = width;
+							this.right = this.left + width;
+							if (width <= minSize) {
+								images[2].setVisible(false);
+							} else {
+								(body = images[2]).setVisible(true);
+								body.x = this.left + (width >> 1);
+								body.setDisplaySize(width -= (thickness << 1), WallPrototype.imageLargeDimension);
+								body.setRectangle(width, thickness, { isStatic: true });
+							}
+						}
+					}
+				}
+			},
+
+			move: function (dx, dy) {
+				this.left += dx;
+				this.top += dy;
+				this.right += dx;
+				this.bottom += dy;
+				var i, image, images = this.images;
+				for (i = images.length - 1; i >= 0; i--) {
+					image = images[i];
+					image.x += dx;
+					image.y += dy;
+				}
+			},
+
+			setAlpha: function (alpha) {
+				var i, image, images = this.images;
+				for (i = images.length - 1; i >= 0; i--) {
+					image = images[i];
+					image.setAlpha(alpha);
+				}
+			},
+
+			recreate: function (scene, l, t, s, c, vertical) {
+				// For sake of performance, assume all parameters contain valid values
+				var large = WallPrototype.imageLargeDimension,
+					thickness = WallPrototype.thickness,
+					thicknessHalf = thickness >> 1,
+					minSize = WallPrototype.minSize,
+					keyPrefix = "wall" + c + "_",
+					images = this.images;
+
+				if (s < minSize)
+					s = minSize;
+
+				var w = (vertical ? thickness : s),
+					wHalf = w >> 1,
+					h = (vertical ? s : thickness),
+					hHalf = h >> 1,
+					tmp,
+					capStartGlow = images[0], capStart = images[1],
+					body = images[2],
+					capEnd = images[3], capEndGlow = images[4];
+
+				l += wHalf;
+				t += hHalf;
+
+				if (vertical) {
+					capStartGlow.x = l;
+					capStartGlow.y = t - hHalf - thicknessHalf;
+					capStartGlow.setTexture(keyPrefix + "cap_t_glow");
+					capStart.x = l;
+					capStart.y = t - hHalf + thicknessHalf;
+					capStart.setTexture(keyPrefix + "cap_t");
+					// See comment below...
+					//body.x = l;
+					//body.y = t;
+					//body.setTexture(keyPrefix + "v");
+					//body.setSize(large, tmp = Math.max(10, h - minSize));
+					//body.setRectangle(thickness, tmp, { isStatic: true });
+					capEnd.x = l;
+					capEnd.y = t + hHalf - thicknessHalf;
+					capEnd.setTexture(keyPrefix + "cap_t");
+					capEnd.flipX = false;
+					capEnd.flipY = true;
+					capEndGlow.x = l;
+					capEndGlow.y = t + hHalf + thicknessHalf;
+					capEndGlow.setTexture(keyPrefix + "cap_t_glow");
+					capEndGlow.flipX = false;
+					capEndGlow.flipY = true;
+				} else {
+					capStartGlow.x = l - wHalf - thicknessHalf;
+					capStartGlow.y = t;
+					capStartGlow.setTexture(keyPrefix + "cap_l_glow");
+					capStart.x = l - wHalf + thicknessHalf;
+					capStart.y = t;
+					capStart.setTexture(keyPrefix + "cap_l");
+					// See comment below...
+					//body.x = l;
+					//body.y = t;
+					//body.setTexture(keyPrefix + "h");
+					//body.setDisplaySize(tmp = Math.max(10, w - minSize), large);
+					//body.setRectangle(tmp, thickness, { isStatic: true });
+					capEnd.x = l + wHalf - thicknessHalf;
+					capEnd.y = t;
+					capEnd.setTexture(keyPrefix + "cap_l");
+					capEnd.flipX = true;
+					capEnd.flipY = false;
+					capEndGlow.x = l + wHalf + thicknessHalf;
+					capEndGlow.y = t;
+					capEndGlow.setTexture(keyPrefix + "cap_l_glow");
+					capEndGlow.flipX = true;
+					capEndGlow.flipY = false;
+				}
+
+				// Weird things will happen to body during the next time adjust() runs if
+				// we simply change its properties... So it must actually be reacreated :(
+				body.destroy();
+				body = scene.add.image(l, t, vertical ? (keyPrefix + "v") : (keyPrefix + "h"))
+					.setBlendMode(Phaser.BlendModes.ADD);
+				body.wall = this;
+				if (vertical)
+					body.setDisplaySize(large, tmp = Math.max(10, h - minSize));
+				else
+					body.setDisplaySize(tmp = Math.max(10, w - minSize), large);
+				scene.matter.add.gameObject(
+					body,
+					(vertical ?
+						scene.matter.bodies.rectangle(l, t, thickness, tmp, { isStatic: true }) :
+						scene.matter.bodies.rectangle(l, t, tmp, thickness, { isStatic: true }))
+				);
+				body.setVisible(s > minSize);
+				images[2] = body;
+
+				this.left = l - wHalf;
+				this.top = t - hHalf;
+				this.right = l + wHalf;
+				this.bottom = t + hHalf;
+				this.width = w;
+				this.height = h;
+				this.vertical = vertical;
+				this.color = c;
+			},
+
+			destroy: function () {
+				UIObject.remove(this);
+
+				var i, image, images;
+				if ((images = this.images)) {
+					for (i = images.length - 1; i >= 0; i--) {
+						image = images[i];
+						image.wall = null;
+						image.destroy();
+						images[i] = null;
+					}
+					this.images = null;
+				}
+			}
+		};
+
+		// I'm not using Wall.prototype = { ... } for performance reasons
+		function Wall(scene, left, top, size, color, vertical) {
+			// Make sure left, top and height are even numbers
+			var l = (left & ~1),
+				t = (top & ~1),
+				s = (size & ~1),
+				large = WallPrototype.imageLargeDimension,
+				thickness = WallPrototype.thickness,
+				thicknessHalf = thickness >> 1,
+				minSize = WallPrototype.minSize,
+				c = Math.max(0, (color | 0) % WallPrototype.colors.length),
+				keyPrefix = "wall" + c + "_";
+
+			if (s < minSize)
+				s = minSize;
+
+			var w = (vertical ? thickness : s),
+				wHalf = w >> 1,
+				h = (vertical ? s : thickness),
+				hHalf = h >> 1,
+				tmp,
+				capStartGlow, capStart, body, capEnd, capEndGlow;
+
+			l += wHalf;
+			t += hHalf;
+
+			capStartGlow = (vertical ?
+				scene.add.image(l, t - hHalf - thicknessHalf, keyPrefix + "cap_t_glow") :
+				scene.add.image(l - wHalf - thicknessHalf, t, keyPrefix + "cap_l_glow")
+			).setBlendMode(Phaser.BlendModes.ADD);
+			capStartGlow.wall = this;
+
+			capStart = (vertical ?
+				scene.add.image(l, t - hHalf + thicknessHalf, keyPrefix + "cap_t") :
+				scene.add.image(l - wHalf + thicknessHalf, t, keyPrefix + "cap_l")
+			).setBlendMode(Phaser.BlendModes.ADD);
+			capStart.wall = this;
+			scene.matter.add.gameObject(
+				capStart,
+				scene.matter.bodies.rectangle(capStart.x, capStart.y, thickness, thickness, { isStatic: true })
+			);
+
+			// scene.add.tileSprite ended up blurring the edges!
+			body = scene.add.image(l, t, vertical ? (keyPrefix + "v") : (keyPrefix + "h"))
+				.setBlendMode(Phaser.BlendModes.ADD);
+			body.wall = this;
+			if (vertical)
+				body.setDisplaySize(large, tmp = Math.max(10, h - minSize));
+			else
+				body.setDisplaySize(tmp = Math.max(10, w - minSize), large);
+			scene.matter.add.gameObject(
+				body,
+				(vertical ?
+					scene.matter.bodies.rectangle(l, t, thickness, tmp, { isStatic: true }) :
+					scene.matter.bodies.rectangle(l, t, tmp, thickness, { isStatic: true }))
+			);
+			body.setVisible(s > minSize);
+
+			capEnd = (vertical ?
+				scene.add.image(l, t + hHalf - thicknessHalf, keyPrefix + "cap_t") :
+				scene.add.image(l + wHalf - thicknessHalf, t, keyPrefix + "cap_l")
+			).setBlendMode(Phaser.BlendModes.ADD);
+			capEnd.wall = this;
+			if (vertical)
+				capEnd.flipY = true;
+			else
+				capEnd.flipX = true;
+			scene.matter.add.gameObject(
+				capEnd,
+				scene.matter.bodies.rectangle(capEnd.x, capEnd.y, thickness, thickness, { isStatic: true })
+			);
+
+			capEndGlow = (vertical ?
+				scene.add.image(l, t + hHalf + thicknessHalf, keyPrefix + "cap_t_glow") :
+				scene.add.image(l + wHalf + thicknessHalf, t, keyPrefix + "cap_l_glow")
+			).setBlendMode(Phaser.BlendModes.ADD);
+			capEndGlow.wall = this;
+			if (vertical)
+				capEndGlow.flipY = true;
+			else
+				capEndGlow.flipX = true;
+
+			this.objectType = UIObject.typeWall;
+			this.left = l - wHalf;
+			this.top = t - hHalf;
+			this.right = l + wHalf;
+			this.bottom = t + hHalf;
+			this.width = w;
+			this.height = h;
+			this.vertical = !!vertical;
+			this.color = c;
+			this.images = [capStartGlow, capStart, body, capEnd, capEndGlow];
+
+			// I'm copying the functions here, instead of using
+			// Wall.prototype = { ... }, for performance reasons
+			for (var n in WallFunctions)
+				this[n] = WallFunctions[n];
+		}
+
+		var Pencil = {
+			images: [],
+
+			addImagesToScene: function (scene) {
+				for (var c = WallPrototype.colors.length - 1; c >= 0; c--)
+					scene.textures.addBase64("pencil" + c, Pencil.images[c]);
+			},
+
+			loadImages: function (callback) {
+				createTintedImages(["assets/pencil.png"], WallPrototype.colors, function (result, error) {
+					if (result)
+						Pencil.images = result[0];
+					callback(error);
+				});
+			}
+		};
+
+		var Tool = {
+			actionMove: 0,
+			actionDrawWall: 1,
+			actionDrawGoal: 2,
+			actionDrawHole: 3,
+			actionRemove: 4,
+
+			lastObj: null,
+			lastX: 0,
+			lastY: 0,
+			firstLeft: 0,
+			firstTop: 0,
+			lastLeft: 0,
+			lastTop: 0,
+			deltaLeft: 0,
+			deltaTop: 0,
+			lastSize: 0,
+
+			currentAction: 0,
+			currentColor: 0,
+
+			handlePointerDown: function (scene, x, y) {
+				var obj;
+
+				this.lastX = x;
+				this.lastY = y;
+
+				switch (this.currentAction) {
+					case this.actionMove:
+						if ((obj = UIObject.getAt(x, y, false))) {
+							this.lastObj = obj;
+							this.lastLeft = obj.left;
+							this.lastTop = obj.top;
+							this.deltaLeft = obj.left - x;
+							this.deltaTop = obj.top - y;
+							tweenBlink(scene, obj.images || (obj.image ? [obj.image] : [obj]), null, 300);
+						}
+						break;
+					case this.actionDrawWall:
+						this.firstLeft = _10(x);
+						this.firstTop = _10(y);
+						this.lastLeft = this.firstLeft;
+						this.lastTop = this.firstTop;
+						this.lastSize = 0;
+						UIObject.add(this.lastObj = new Wall(scene, this.firstLeft, this.firstTop, 0, this.currentColor, true));
+						break;
+					case this.actionDrawGoal:
+						break;
+					case this.actionDrawHole:
+						break;
+					case this.actionRemove:
+						if ((obj = UIObject.getAt(x, y, false))) {
+							this.lastObj = obj;
+							obj.setAlpha(0.25);
+						}
+						break;
+				}
+			},
+
+			handlePointerMove: function (scene, x, y) {
+				var obj, left, top;
+
+				if (x === this.lastX && y === this.lastY)
+					return;
+
+				this.lastX = x;
+				this.lastY = y;
+
+				switch (this.currentAction) {
+					case this.actionMove:
+						if (!(obj = this.lastObj))
+							break;
+						left = _10(this.deltaLeft + x);
+						top = _10(this.deltaTop + y);
+						if (left === this.lastLeft && top === this.lastTop)
+							break;
+						obj.move(left - this.lastLeft, top - this.lastTop);
+						this.lastLeft = left;
+						this.lastTop = top;
+						break;
+					case this.actionDrawWall:
+						if (!(obj = this.lastObj))
+							break;
+						left = _10(x);
+						top = _10(y);
+						if (left === this.lastLeft && top === this.lastTop)
+							break;
+						obj.adjust(scene, this.firstLeft, this.firstTop, left, top);
+						this.lastLeft = left;
+						this.lastTop = top;
+						break;
+					case this.actionDrawGoal:
+						break;
+					case this.actionDrawHole:
+						break;
+					case this.actionRemove:
+						obj = UIObject.getAt(x, y, false);
+						if (this.lastObj !== obj) {
+							if (this.lastObj)
+								this.lastObj.setAlpha(1);
+							if (obj)
+								obj.setAlpha(0.25);
+							this.lastObj = obj;
+						}
+						break;
+				}
+			},
+
+			handlePointerUp: function (x, y) {
+				var obj;
+
+				switch (this.currentAction) {
+					case this.actionMove:
+						break;
+					case this.actionDrawWall:
+						break;
+					case this.actionDrawGoal:
+						break;
+					case this.actionDrawHole:
+						break;
+					case this.actionRemove:
+						obj = UIObject.getAt(x, y, false);
+						if (this.lastObj)
+							this.lastObj.setAlpha(1);
+						if (obj)
+							obj.destroy();
+						break;
+				}
+				this.lastObj = null;
+			}
+		};
+
+		var GameScene = new Phaser.Class({
+			fade: null,
+			blinking: false,
+
+			flareCount: 64,
+			flares: [],
+
+			touchId: null,
+			touch1: null,
+			touch2: null,
+
+			buttons: [],
+			buttonSize: 96,
+			buttonsVisible: true,
+			buttonPlay: null,
+			buttonPause: null,
+			buttonMenuX: 0,
+			buttonMenuY: 0,
+
+			Extends: Phaser.Scene,
+
+			initialize: function () {
+				Phaser.Scene.call(this, { key: "GameScene" });
+			},
+
+			preload: function () {
+				this.load.image("black", "assets/black.png");
+				this.load.image("touch", "assets/touch.png");
+				this.load.image("ball", "assets/ball.png");
+				this.load.image("full_screen", "assets/full_screen.png");
+				this.load.image("menu", "assets/menu.png");
+				this.load.image("move", "assets/move.png");
+				this.load.image("pause", "assets/pause.png");
+				this.load.image("play", "assets/play.png");
+				this.load.image("remove", "assets/remove.png");
+				FlarePrototype.addImagesToScene(this);
+				WallPrototype.addImagesToScene(this);
+				Pencil.addImagesToScene(this);
+			},
+
+			create: function () {
+				hideLoading();
+
+				// For compatibility with Phaser 2
+				game.width = game.scale.width;
+				game.height = game.scale.height;
+
+				this.matter.world.setBounds();
+
+				this.blinking = false;
+				this.buttonsVisible = true;
+				this.buttonMenuX = this.buttonSize >> 1;
+				this.buttonMenuY = game.height - this.buttonMenuX;
+				UIObject.editMode = true;
+				Tool.currentAction = Tool.actionMove;
+
+				this.prepareFlares();
+				this.prepareWalls();
+				this.prepareTouch();
+				this.prepareButtons();
+
+				UIObject.prepareBall(this);
+
+				this.fade = createFade(this, 1, 0, function () {
+					this.fade.destroy();
+					this.fade = null;
+				});
+			},
+
+			update: function (time, delta) {
+				this.processFlares(delta);
+				if (UIObject.editMode) {
+					if (this.touchId !== null) {
+						var p = this.input.activePointer;
+						Tool.handlePointerMove(this, p.x | 0, p.y | 0);
+					}
+				} else {
+					this.processGravity();
+				}
+			},
+
+			prepareFlares: function () {
+				var i, flares = new Array(this.flareCount);
+
+				this.flares = flares;
+
+				for (i = this.flareCount - 1; i >= 0; i--)
+					flares[i] = new Flare(this);
+			},
+
+			processFlares: function (delta) {
+				var i, flares = this.flares;
+
+				for (i = this.flareCount - 1; i >= 0; i--)
+					flares[i].process(delta);
+			},
+
+			prepareWalls: function () {
+				UIObject.add(new Wall(this, 50, 50, 200, 0, true));
+				UIObject.add(new Wall(this, 90, 100, 400, 3, false));
+				UIObject.add(new Wall(this, 200, 490, 350, 2, false));
+				UIObject.add(new Wall(this, 300, 140, 150, 1, true));
+				UIObject.add(new Wall(this, 300, 340, 150, 1, true));
+				UIObject.add(new Wall(this, 800, 200, 400, 4, true));
+				UIObject.add(new Wall(this, 840, 200, 150, 4, false));
+				UIObject.add(new Wall(this, 840, 340, 150, 5, false));
+				UIObject.add(new Wall(this, 990, 340, 150, 5, true));
+			},
+
+			processGravity: function () {
+				var ax = 0, ay = 0;
+				if (this.touch1) {
+					var t = this.touch1, p = this.input.activePointer,
+						x1 = t.x, y1 = t.y,
+						x2 = p.x, y2 = p.y,
+						dx = x2 - x1,
+						dy = y2 - y1,
+						d = Math.sqrt((dx * dx) + (dy * dy)), r,
+						ballMaxAcc = UIObject.ballMaxAcc * 0.02;
+					if (d > 0.5) {
+						if (d > 200) {
+							// Faster than using atan, sin and cos ;)
+							r = 200 / d;
+							dx *= r;
+							dy *= r;
+							d = 200;
+							x2 = x1 + dx;
+							y2 = y1 + dy;
+						}
+						// ax = ballMaxAcc * (d / 200) * (dx / d);
+						// ay = ballMaxAcc * (d / 200) * (dy / d);
+						// Simplifying:
+						// ax = ballMaxAcc / 200 * dx;
+						// ay = ballMaxAcc / 200 * dy;
+						ax = ballMaxAcc * dx;
+						ay = ballMaxAcc * dy;
+					}
+
+					this.touch2.x = x2;
+					this.touch2.y = y2;
+				}
+				this.matter.world.setGravity(ax, ay, 0.0005);
+
+				var ball = UIObject.ball,
+					body = ball.body,
+					v = body.velocity,
+					vx = v.x,
+					vy = v.y,
+					ballMaxVel = UIObject.ballMaxVel;
+				if (vx > ballMaxVel)
+					vx = ballMaxVel;
+				else if (vx < -ballMaxVel)
+					vx = -ballMaxVel;
+				if (vy > ballMaxVel)
+					vy = ballMaxVel;
+				else if (vy < -ballMaxVel)
+					vy = -ballMaxVel;
+				ball.setVelocity(vx, vy);
+			},
+
+			prepareTouch: function () {
+				this.touchId = null;
+				this.touch1 = null;
+				this.touch2 = null;
+
+				this.input.on("pointerdown", function (pointer, interactiveObjects) {
+					if (this.fade || this.touchId !== null || (interactiveObjects && interactiveObjects.length))
+						return;
+
+					if (UIObject.editMode) {
+						this.touchId = pointer.id;
+						Tool.handlePointerDown(this, pointer.x | 0, pointer.y | 0);
+						return;
+					}
+
+					this.touchId = pointer.id;
+					this.touch1 = this.add.image(pointer.x, pointer.y, "touch");
+					this.touch1.setOrigin(0.5);
+					this.touch1.setBlendMode(Phaser.BlendModes.ADD);
+					this.touch1.setAlpha(0.4);
+					this.touch2 = this.add.image(pointer.x, pointer.y, "touch");
+					this.touch2.setOrigin(0.5);
+					this.touch2.setBlendMode(Phaser.BlendModes.ADD);
+				}, this);
+
+				this.input.on("pointerup", function (pointer) {
+					if (this.touchId !== pointer.id)
+						return;
+
+					if (UIObject.editMode) {
+						this.touchId = null;
+						Tool.handlePointerUp(pointer.x | 0, pointer.y | 0);
+						return;
+					}
+
+					var touch1 = this.touch1, touch2 = this.touch2;
+					this.touchId = null;
+					this.touch1 = null;
+					this.touch2 = null;
+					tweenAlpha(this, 0, [touch1, touch2], function () {
+						touch1.destroy();
+						touch2.destroy();
+						touch1 = null;
+						touch2 = null;
+					}, 200);
+				}, this);
+			},
+
+			stopBlinking: function () {
+				this.blinking = false;
+			},
+
+			createButton: function (x, y, image, callback) {
+				var button = this.add.image(x, y, image)
+					.setBlendMode(Phaser.BlendModes.ADD);
+				button.isUIButton = true;
+				button.x0 = x;
+				button.y0 = y;
+				button.setOrigin(0.5);
+				button.setInteractive({ useHandCursor: true }).on("pointerup", function () {
+					if (this.fade || this.blinking || this.touchId !== null)
+						return;
+
+					var blinkObj = (callback.apply(this) || button);
+					this.blinking = true;
+					tweenBlink(this, [blinkObj], this.stopBlinking);
+				}, this);
+
+				this.buttons.push(button);
+
+				return button;
+			},
+
+			pencilCallback: function (c) {
+				return function () {
+					Tool.currentAction = Tool.actionDrawWall;
+					Tool.currentColor = c;
+				};
+			},
+
+			prepareButtons: function () {
+				var c, buttonMenuX = this.buttonMenuX,
+					buttonMenuY = this.buttonMenuY,
+					buttonSize = this.buttonSize,
+					colors = WallPrototype.colors;
+
+				this.buttons = [];
+
+				function buttonMenuClick() {
+					// There is no need to control this tween, because it has the
+					// same duration as the blink, which is already controlled
+					var i, button, buttons = this.buttons;
+					if (this.buttonsVisible) {
+						this.buttonsVisible = false;
+						buttons = buttons.slice(1);
+						this.tweens.add({
+							targets: buttons,
+							alpha: 0,
+							x: this.buttonMenuX,
+							y: this.buttonMenuY,
+							ease: "Sine.easeInOut",
+							duration: 500,
+							onComplete: function () {
+								for (var i = buttons.length - 1; i >= 0; i--)
+									buttons[i].setVisible(false);
+							},
+							onCompleteScope: this
+						});
+					} else {
+						this.buttonsVisible = true;
+						for (i = buttons.length - 1; i >= 1; i--) {
+							button = buttons[i];
+							button.setAlpha(0);
+							button.setVisible(true);
+							this.tweens.add({
+								targets: [button],
+								alpha: 1,
+								x: button.x0,
+								y: button.y0,
+								ease: "Sine.easeInOut",
+								duration: 500
+							});
+						}
+						this.buttonPlay.setVisible(UIObject.editMode);
+						this.buttonPause.setVisible(!UIObject.editMode);
+						if (!UIObject.editMode)
+							buttonPauseClick.apply(this);
+					}
+				}
+
+				function buttonPauseClick() {
+					if (UIObject.editMode)
+						return;
+					this.buttonPause.setVisible(false);
+					this.buttonPlay.setVisible(true);
+					UIObject.editMode = true;
+					UIObject.resetBall(this);
+					return this.buttonPlay;
+				}
+
+				// buttons[0] must be the menu button
+				this.createButton(buttonMenuX, buttonMenuY, "menu", buttonMenuClick);
+
+				this.buttonPlay = this.createButton(buttonMenuX, buttonMenuY - buttonSize, "play", function () {
+					if (!UIObject.editMode)
+						return;
+					this.buttonPlay.setVisible(false);
+					this.buttonPause.setVisible(true);
+					UIObject.editMode = false;
+					UIObject.resetBall(this);
+					if (this.buttonsVisible)
+						buttonMenuClick.apply(this);
+					return this.buttonPause;
+				});
+
+				this.buttonPause = this.createButton(buttonMenuX, buttonMenuY - buttonSize, "pause", buttonPauseClick);
+				this.buttonPause.setVisible(false);
+
+				this.createButton(buttonMenuX, buttonMenuY - (buttonSize << 1), "full_screen", function () {
+					toggleFullScreen(this);
+				});
+
+				buttonMenuX += buttonSize;
+				this.createButton(buttonMenuX, buttonMenuY, "move", function () {
+					Tool.currentAction = Tool.actionMove;
+				});
+
+				for (c = 0; c < colors.length; c++) {
+					buttonMenuX += buttonSize;
+					this.createButton(buttonMenuX, buttonMenuY, "pencil" + c, this.pencilCallback(c));
+				}
+
+				this.createButton(buttonMenuX + buttonSize, buttonMenuY, "remove", function () {
+					Tool.currentAction = Tool.actionRemove;
+				});
+			}
+		});
+
+		// References:
+		// https://github.com/photonstorm/phaser/blob/v3.18.0/src/core/typedefs/GameConfig.js
+		// https://github.com/photonstorm/phaser/blob/v3.18.0/src/core/typedefs/ScaleConfig.js
+		// https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.GameObjectFactory.html
+		// https://photonstorm.github.io/phaser3-docs/Phaser.Scene.html
+		// https://photonstorm.github.io/phaser3-docs/Phaser.Tweens.Tween.html
+		// https://photonstorm.github.io/phaser3-docs/Phaser.Types.Tweens.html#.TweenBuilderConfig
+		// https://photonstorm.github.io/phaser3-docs/Phaser.Animations.AnimationManager.html#create__anchor
+		// https://photonstorm.github.io/phaser3-docs/Phaser.Animations.Animation.html
+		// https://photonstorm.github.io/phaser3-docs/Phaser.Sound.BaseSoundManager.html#add__anchor
+		// https://photonstorm.github.io/phaser3-docs/Phaser.Types.Sound.html#.SoundConfig
+		// https://photonstorm.github.io/phaser3-docs/Phaser.Sound.BaseSound.html
+		// https://photonstorm.github.io/phaser3-docs/Phaser.Math.html#.FloatBetween
+		// https://photonstorm.github.io/phaser3-docs/Phaser.Loader.LoaderPlugin.html
+		// https://photonstorm.github.io/phaser3-docs/Phaser.Loader.Events.html
+		// https://photonstorm.github.io/phaser3-docs/MatterJS.html
+		// https://photonstorm.github.io/phaser3-docs/MatterJS.Bodies.html
+		// https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Matter.html
+		// https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Matter.Components.SetBody.html#setRectangle__anchor
+		// https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Matter.Image.html
+		// https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Matter.Factory.html#gameObject__anchor
+		// https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Matter.Factory.html#rectangle__anchor
+		// https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Matter.World.html
+		// https://rexrainbow.github.io/phaser3-rex-notes/docs/site/touchevents/
+		FlarePrototype.loadImages(function (error) {
+			if (error) {
+				alert("Error loading flare image: " + error);
+				return;
+			}
+			WallPrototype.loadImages(function (error) {
+				if (error) {
+					alert("Error loading wall image: " + error);
+					return;
+				}
+				Pencil.loadImages(function (error) {
+					if (error) {
+						alert("Error loading pencil image: " + error);
+						return;
+					}
+					game = new Phaser.Game({
+						type: Phaser.AUTO,
+						scene: [GameScene],
+						physics: {
+							default: "matter",
+							matter: {
+								//enableSleeping: false,
+								debug: false
+							}
+						},
+						scale: {
+							width: 1280,
+							height: 720,
+							mode: Phaser.Scale.ScaleModes.FIT,
+							autoRound: true,
+							autoCenter: Phaser.Scale.Center.CENTER_BOTH
+						}
+					});
+				});
+			});
+		});
+
+		//]]>
+	</script>
+</body>
+</html>

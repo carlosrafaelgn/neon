@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Neon Labyrinth Maker</string>
+    <string name="app_name_short">Neon</string>
+    <string name="browser_language">en</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm_quit">Do you really want to leave the page? You will lose unsaved information.</string>
+</resources>
