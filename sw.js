@@ -22,17 +22,24 @@ self.addEventListener("install", (event) => {
 	// self.skipWaiting();
 
 	event.waitUntil(caches.open(CACHE_NAME).then((cache) => {
-		return cache.addAll([
-			// According to the spec, the service worker file
-			// is handled differently by the browser and needs
-			// not to be added to the cache. I tested it and I
-			// confirm the service worker works offline even when
-			// not present in the cache (despite the error message
-			// displayed by the browser when trying to fetch it).
-			//
-			// Also, there is no need to worry about max-age and
-			// other cache-control headers/settings, because the
-			// CacheStorage API ignores them.
+		// According to the spec, the service worker file
+		// is handled differently by the browser and needs
+		// not to be added to the cache. I tested it and I
+		// confirm the service worker works offline even when
+		// not present in the cache (despite the error message
+		// displayed by the browser when trying to fetch it).
+		//
+		// Also, there is no need to worry about max-age and
+		// other cache-control headers/settings, because the
+		// CacheStorage API ignores them.
+		//
+		// Nevertheless, even though CacheStorage API ignores
+		// them, tests showed that a in few occasions, when
+		// the browser was fetching these files, the file
+		// being added to the cache actually came from the
+		// browser's own cache... Therefore, I switched from
+		// cache.addAll() to this.
+		const files = [
 			"/neon/",
 			"/neon/?pwa",
 			"/neon/favicon.ico",
@@ -42,7 +49,11 @@ self.addEventListener("install", (event) => {
 			"/neon/phaser-3.18.1.min.js",
 			"/neon/assets/atlas.png",
 			"/neon/assets/atlas.json"
-		]);
+		];
+		const promises = new Array(files.length);
+		for (let i = files.length - 1; i >= 0; i--)
+			promises.push(cache.add(new Request(files[i], { cache: "no-store" })));
+		return Promise.all(promises);
 	}));
 });
 
