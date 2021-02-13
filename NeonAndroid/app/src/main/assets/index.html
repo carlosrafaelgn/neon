@@ -5,48 +5,6 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, minimal-ui, shrink-to-fit=no" />
-
-	<meta property="og:locale" content="en_US" />
-	<meta property="og:type" content="website" />
-	<meta property="og:url" content="https://carlosrafaelgn.github.io/neon/" />
-	<meta property="og:title" content="Neon Labyrinth Maker" />
-	<meta property="og:site_name" content="Neon Labyrinth Maker" />
-	<meta property="og:description" content="Neon Labyrinth Maker" />
-	<meta property="og:image" content="https://carlosrafaelgn.github.io/neon/assets/screenshot.jpg" />
-	<meta property="og:image:type" content="image/jpeg">
-	<meta property="og:image:width" content="1280">
-	<meta property="og:image:height" content="720">
-
-	<meta name="author" content="Carlos Rafael Gimenes das Neves" />
-	<meta name="description" content="Neon Labyrinth Maker" />
-	<meta name="keywords" content="neon, labyrinth, maker, game, mobile game, desktop game" />
-
-	<meta name="apple-mobile-web-app-capable" content="yes" />
-	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
-	<meta name="apple-mobile-web-app-title" content="Neon Labyrinth Maker" />
-	<!--
-		https://w3c.github.io/manifest/#icon-masks
-		https://github.com/w3c/manifest/issues/555
-	-->
-	<link rel="apple-touch-icon" sizes="57x57" href="favicons/apple-icon-57x57.png" />
-	<link rel="apple-touch-icon" sizes="60x60" href="favicons/apple-icon-60x60.png" />
-	<link rel="apple-touch-icon" sizes="72x72" href="favicons/apple-icon-72x72.png" />
-	<link rel="apple-touch-icon" sizes="76x76" href="favicons/apple-icon-76x76.png" />
-	<link rel="apple-touch-icon" sizes="114x114" href="favicons/apple-icon-114x114.png" />
-	<link rel="apple-touch-icon" sizes="120x120" href="favicons/apple-icon-120x120.png" />
-	<link rel="apple-touch-icon" sizes="144x144" href="favicons/apple-icon-144x144.png" />
-	<link rel="apple-touch-icon" sizes="152x152" href="favicons/apple-icon-152x152.png" />
-	<link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-icon-180x180.png" />
-	<link rel="icon" type="image/png" sizes="512x512" href="favicons/favicon-512x512.png" />
-	<link rel="icon" type="image/png" sizes="192x192" href="favicons/favicon-192x192.png" />
-	<link rel="icon" type="image/png" sizes="96x96" href="favicons/favicon-96x96.png" />
-	<link rel="icon" type="image/png" sizes="48x48" href="favicons/favicon-48x48.png" />
-	<link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png" />
-	<link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png" />
-	<link rel="Shortcut Icon" href="favicon.ico" />
-	<link rel="Shortcut Icon" href="favicon.png" />
-	<link rel="manifest" href="manifest.json" />
-	<meta name="msapplication-config" content="browserconfig.xml" />
 	<meta name="theme-color" content="#222222" />
 
 	<title>Neon Labyrinth Maker</title>
@@ -56,6 +14,11 @@
 			height: 100%;
 			min-height: 100%;
 			max-height: 100%;
+			-webkit-tap-highlight-color: rgba(0,0,0,0);
+			/*overscroll-behavior: none;*/
+		}
+
+		html, body {
 			background: #000; /* Opera for Android in full screen mode?!?! */
 		}
 
@@ -67,10 +30,12 @@
 			padding: 0;
 			margin: 0;
 			color: #fff;
+			width: 100%;
 			height: 100%;
 			min-height: 100%;
 			max-height: 100%;
 			overflow: hidden;
+			/*overscroll-behavior: none;*/
 		}
 
 		#divLoading {
@@ -233,7 +198,7 @@
 			<br />
 			<span data-string="text|About3"></span><br />
 			<br />
-			<span data-string="text|About4"></span> <a href="https://github.com/carlosrafaelgn/neon" target="_blank">github.com/carlosrafaelgn/neon</a>. <span data-string="text|About5"></span> <a href="https://carlosrafaelgn.github.io/neon" target="_blank" data-string="text|About6"></a> <span data-string="text|About7"></span> <a href="https://play.google.com/store/apps/details?id=br.com.carlosrafaelgn.neon" target="_blank">Android/WebView</a> <span data-string="text|About8"></span>
+			<span data-string="text|About4"></span> <a href="https://github.com/carlosrafaelgn/neon" target="_blank">github.com/carlosrafaelgn/neon</a>. <span id="spanWakeLock"><span data-string="text|About5"></span> <a href="https://carlosrafaelgn.github.io/neon" target="_blank" data-string="text|About6"></a> <span data-string="text|About7"></span> <a href="https://play.google.com/store/apps/details?id=br.com.carlosrafaelgn.neon" target="_blank">Android/WebView</a> <span data-string="text|About8"></span></span>
 		</div>
 	</div>
 
@@ -326,8 +291,11 @@
 		var game = null, gameCanvas = null,
 			divLoading = document.getElementById("divLoading"), divLoadingTimeout = 0,
 			installationPrompt = null,
+			fullscreenChangedTimeout = 0,
+			wakeLockWanted = false, wakeLockPromise = null, wakeLockSentinel = null, wakeLockPresent = (!!navigator["wakeLock"] && !!navigator["wakeLock"].request),
 			divVisible = false, divTimeout = 0, divAdjustTimeout = 0, divAdjustCallback = null,
 			divHelp = document.getElementById("divHelp"),
+			spanWakeLock = document.getElementById("spanWakeLock"),
 			divLevelSelection = document.getElementById("divLevelSelection"),
 			btnInstall = document.getElementById("btnInstall");
 
@@ -398,6 +366,79 @@
 				}
 			}
 			return JSON.stringify({ frames: r });
+		}
+
+		function ignorePromise(p) {
+			try {
+				var nop = function () {};
+				if (p && p.then)
+					p.then(nop, nop);
+			} catch (ex) {
+				// Just ignore...
+			}
+		}
+
+		function requestWakeLock() {
+			wakeLockWanted = true;
+
+			if (wakeLockPromise || wakeLockSentinel)
+				return;
+
+			try {
+				var wakeLock = navigator["wakeLock"];
+
+				if (wakeLock && wakeLock.request) {
+					// https://w3c.github.io/screen-wake-lock/#extensions-to-the-navigator-interface
+					// https://developer.mozilla.org/en-US/docs/Web/API/WakeLock/request
+					// https://developer.mozilla.org/en-US/docs/Web/API/WakeLockSentinel
+					wakeLockPromise = wakeLock.request("screen");
+					if (wakeLockPromise && wakeLockPromise.then) {
+						wakeLockPromise.then(function (sentinel) {
+							wakeLockPromise = null;
+							wakeLockSentinel = sentinel;
+							if (!wakeLockWanted)
+								releaseWakeLock();
+						}, function (reason) {
+							wakeLockPromise = null;
+							if (!wakeLockWanted)
+								releaseWakeLock();
+						});
+					} else {
+						wakeLockPromise = null;
+					}
+				}
+			} catch (ex) {
+				// Just ignore...
+			}
+		}
+
+		function releaseWakeLock() {
+			wakeLockWanted = false;
+
+			if (wakeLockPromise || !wakeLockSentinel)
+				return;
+
+			try {
+				if (wakeLockSentinel.release) {
+					wakeLockPromise = wakeLockSentinel.release();
+					if (wakeLockPromise && wakeLockPromise.then) {
+						wakeLockPromise.then(function () {
+							wakeLockPromise = null;
+							if (wakeLockWanted)
+								requestWakeLock();
+						}, function (reason) {
+							wakeLockPromise = null;
+							if (wakeLockWanted)
+								requestWakeLock();
+						});
+					} else {
+						wakeLockPromise = null;
+					}
+				}
+				wakeLockSentinel = null;
+			} catch (ex) {
+				// Just ignore...
+			}
 		}
 
 		function showLoading() {
@@ -489,6 +530,7 @@
 
 		function showHelp() {
 			btnInstall.style.display = (installationPrompt ? "" : "none");
+			spanWakeLock.style.display = (wakeLockPresent ? "none" : "");
 			return showDiv(divHelp, adjustDivHelp);
 		}
 
@@ -3013,10 +3055,13 @@
 			},
 
 			toggleFullscreen: function () {
+				// Phaser appears not to like someone else messing around with fullscreen...
+				// So, let's just keep the original code here...
+				//FullscreenControl.toggleFullscreen();
 				if (!this.scale.fullscreen.available)
 					return;
 				try {
-					this.scale.fullscreenTarget = document.documentElement;
+					this.scale.fullscreenTarget = document.body; //document.documentElement;
 					this.scale.toggleFullscreen();
 				} catch (ex) {
 					// Just ignore...
@@ -3332,9 +3377,11 @@
 
 			enablePhysics: function (enabled) {
 				if (enabled) {
+					requestWakeLock();
 					this.matter.resume();
 					this.matter.world.on("collisionstart", this.collisionHandler, this);
 				} else {
+					releaseWakeLock();
 					this.matter.pause();
 					this.matter.world.off("collisionstart", this.collisionHandler, this);
 				}
@@ -3422,6 +3469,165 @@
 				}
 			}
 		});
+
+		var FullscreenControl = {
+			// Source code taken from my other project ;)
+			// https://github.com/carlosrafaelgn/pixel
+
+			// There is a bunch of weird try/catch's here... I know... I don't care!
+			// It's a jungle out there! Fullscreen is bizarre!
+
+			requestFullscreen: function (element) {
+				if (!element)
+					element = document.body;
+				var ok = true, p = null;
+				try {
+					if (element["requestFullscreen"])
+						p = element["requestFullscreen"]();
+					else if (element["webkitRequestFullscreen"])
+						p = element["webkitRequestFullscreen"]();
+					else if (element["mozRequestFullScreen"])
+						p = element["mozRequestFullScreen"]();
+					else if (element["msRequestFullscreen"])
+						p = element["msRequestFullscreen"]();
+					else
+						ok = false;
+				} catch (ex) {
+					ok = false;
+				}
+				if (!ok && element !== document.body)
+					FullscreenControl.requestFullscreen();
+				else
+					ignorePromise(p);
+			},
+
+			exitFullscreen: function () {
+				var p = null;
+				try {
+					if (document["exitFullscreen"])
+						p = document["exitFullscreen"]();
+					else if (document["webkitExitFullscreen"])
+						p = document["webkitExitFullscreen"]();
+					else if (document["mozExitFullScreen"])
+						p = document["mozExitFullScreen"]();
+					else if (document["msExitFullscreen"])
+						p = document["msExitFullscreen"]();
+				} catch (ex) {
+					// Just ignore...
+				}
+				ignorePromise(p);
+			},
+
+			getFullscreenElement: function () {
+				var e = null;
+				try {
+					if (("fullscreenElement" in document))
+						e = document["fullscreenElement"];
+					if (!e && ("webkitFullscreenElement" in document))
+						e = document["webkitFullscreenElement"];
+					if (!e && ("mozFullscreenElement" in document))
+						e = document["mozFullscreenElement"];
+					if (!e && ("msFullscreenElement" in document))
+						e = document["msFullscreenElement"];
+				} catch (ex) {
+					// Just ignore...
+				}
+				return e;
+			},
+
+			onfullscreenchange: function (listener) {
+				try {
+					if (("onfullscreenchange" in document))
+						document["onfullscreenchange"] = listener;
+					if (("onwebkitfullscreenchange" in document))
+						document["onwebkitfullscreenchange"] = listener;
+					if (("onmozfullscreenchange" in document))
+						document["onmozfullscreenchange"] = listener;
+					if (("onmsfullscreenchange" in document))
+						document["onmsfullscreenchange"] = listener;
+				} catch (ex) {
+					// Just ignore...
+				}
+			},
+
+			toggleFullscreen: function () {
+				FullscreenControl.setFullscreenMode(!FullscreenControl.isFullscreenMode());
+			},
+
+			isFullscreenMode: function () {
+				return !!FullscreenControl.getFullscreenElement();
+			},
+
+			setFullscreenMode: function (fullscreen) {
+				if (fullscreen)
+					FullscreenControl.requestFullscreen();
+				else
+					FullscreenControl.exitFullscreen();
+			}
+		};
+
+		function fullscreenChanged(e) {
+			if (fullscreenChangedTimeout) {
+				clearTimeout(fullscreenChangedTimeout);
+				fullscreenChangedTimeout = 0;
+			}
+
+			try {
+				if (FullscreenControl.isFullscreenMode())
+					fullscreenChangedTimeout = setTimeout(fullscreenChangedHandler, 150);
+				else
+					fullscreenChangedHandler();
+			} catch (ex) {
+				// Just ignore...
+			}
+		}
+
+		function fullscreenChangedHandler() {
+			fullscreenChangedTimeout = 0;
+			// https://www.w3.org/TR/screen-orientation/#locking-to-a-specific-orientation-and-unlocking
+			// https://developer.mozilla.org/en-US/docs/Web/API/Screen/orientation
+			// https://developer.mozilla.org/en-US/docs/Web/API/Screen/lockOrientation
+			if (screen["mozLockOrientation"] && screen["mozUnlockOrientation"]) {
+				try {
+					if (FullscreenControl.isFullscreenMode()) {
+						if (screen["mozLockOrientation"]("landscape-primary"))
+							return;
+					} else {
+						if (screen["mozUnlockOrientation"]())
+							return;
+					}
+				} catch (ex) {
+					// Just ignore...
+				}
+			}
+			if (screen["msLockOrientation"] && screen["msUnlockOrientation"]) {
+				try {
+					if (FullscreenControl.isFullscreenMode()) {
+						if (screen["msLockOrientation"]("landscape-primary"))
+							return;
+					} else {
+						if (screen["msUnlockOrientation"]())
+							return;
+					}
+				} catch (ex) {
+					// Just ignore...
+				}
+			}
+			if (screen.orientation && screen.orientation.lock && screen.orientation.unlock) {
+				try {
+					ignorePromise(FullscreenControl.isFullscreenMode() ?
+						screen.orientation.lock("landscape-primary") :
+						// Are there browsers out there returning a promise here?!?!
+						screen.orientation.unlock());
+				} catch (ex) {
+					// For those browsers that do not support lock(), but
+					// fail to return a proper Promise...
+				}
+			}
+		}
+
+		if (!isNeon)
+			FullscreenControl.onfullscreenchange(fullscreenChanged);
 
 		// References:
 		// https://github.com/photonstorm/phaser/blob/v3.18.0/src/core/typedefs/GameConfig.js
