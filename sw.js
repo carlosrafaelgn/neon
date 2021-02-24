@@ -78,7 +78,7 @@ self.addEventListener("install", (event) => {
 		];
 		const promises = new Array(files.length);
 		for (let i = files.length - 1; i >= 0; i--)
-			promises.push(cache.add(new Request(files[i], { cache: "no-store" })));
+			promises[i] = cache.add(new Request(files[i], { cache: "no-store" }));
 		return Promise.all(promises);
 	}));
 });
