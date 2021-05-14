@@ -2,8 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en-us">
 <head>
 	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="ie=edge" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, minimal-ui, shrink-to-fit=no" />
 	<meta name="theme-color" content="#222222" />
 
@@ -209,18 +208,9 @@
 		//<![CDATA[
 		"use strict";
 
-		var queryString = "", isNeon = false, isPWA = false, language = "en", strings = null;
+		var isNeon = ("neon" in window), language = "en", strings = null;
 
 		(function () {
-			var i, pair, assoc = {}, keyValues = location.search.substring(1).split("&");
-			for (i = keyValues.length - 1; i >= 0; i--) {
-				pair = keyValues[i].split("=");
-				assoc[decodeURIComponent(pair[0].replace(/\+/g, " "))] = (pair.length === 1 ? "" : decodeURIComponent(pair[1].replace(/\+/g, " ")));
-			}
-			queryString = assoc;
-			isNeon = ("neon" in window);
-			isPWA = (("pwa" in queryString) || isNeon);
-
 			if (!window.strings || (typeof window.strings !== "object")) window.strings = {};
 			function addString(key, value) { if (!window.strings[key]) window.strings[key] = value; }
 
@@ -2819,8 +2809,7 @@
 					}
 				}
 
-				if (!isPWA)
-					targets.push(this.createButton(game.width - buttonSizeHalf, buttonSizeHalf, "full_screen", this.toggleFullscreen));
+				targets.push(this.createButton(game.width - buttonSizeHalf, buttonSizeHalf, "full_screen", this.toggleFullscreen));
 
 				if (!this.gameEnded && UIObject.accelerationModeSupported)
 					targets.push(this.buttonTouchMode = this.createButton(game.width >> 1, buttonMenuY + buttonSize2, UIObject.touchMode ? "hand" : (UIObject.invertXY ? "device2" : "device"), this.toggleTouchMode));
@@ -3130,8 +3119,7 @@
 					this.gotoMode(this.modeEditor);
 				});
 
-				if (!isPWA)
-					this.createButton(game.width - buttonSizeHalf, buttonSizeHalf, "full_screen", this.toggleFullscreen);
+				this.createButton(game.width - buttonSizeHalf, buttonSizeHalf, "full_screen", this.toggleFullscreen);
 
 				this.createButton(game.width - buttonSizeHalf, game.height - buttonSizeHalf, "question", function () {
 					this.pushHistoryState();
@@ -3165,10 +3153,8 @@
 				buttonMenuY -= buttonSize;
 				this.createButton(buttonMenuX, buttonMenuY, "share", this.share);
 
-				if (!isPWA) {
-					buttonMenuY -= buttonSize;
-					this.createButton(buttonMenuX, buttonMenuY, "full_screen", this.toggleFullscreen);
-				}
+				buttonMenuY -= buttonSize;
+				this.createButton(buttonMenuX, buttonMenuY, "full_screen", this.toggleFullscreen);
 
 				buttonMenuY -= buttonSize;
 				this.createButton(buttonMenuX, buttonMenuY, "back", function () {
@@ -3222,8 +3208,7 @@
 				var buttonSize = this.buttonSize,
 					buttonSizeHalf = buttonSize >> 1;
 
-				if (!isPWA)
-					this.createButton(game.width - buttonSizeHalf, buttonSizeHalf, "full_screen", this.toggleFullscreen);
+				this.createButton(game.width - buttonSizeHalf, buttonSizeHalf, "full_screen", this.toggleFullscreen);
 
 				this.createButton(buttonSizeHalf, buttonSizeHalf, "back", function () {
 					window.history.back();
